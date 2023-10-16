@@ -1,14 +1,12 @@
 import 'dart:io';
-
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 import 'package:bloc/bloc.dart';
-import 'package:firebase_auth/firebase_auth.dart' as auth;
 import 'package:app_emergen/constants.dart';
 import 'package:app_emergen/model/user.dart';
-import 'package:app_emergen/services/authenticate.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 part 'authentication_event.dart';
-
 part 'authentication_state.dart';
 
 class AuthenticationBloc
@@ -25,92 +23,119 @@ class AuthenticationBloc
       if (!finishedOnBoarding) {
         emit(const AuthenticationState.onboarding());
       } else {
-        user = await FireStoreUtils.getAuthUser();
-        if (user == null) {
+        String? token = await getToken();
+        if (token == null) {
           emit(const AuthenticationState.unauthenticated());
         } else {
           emit(AuthenticationState.authenticated(user!));
         }
       }
     });
+
     on<FinishedOnBoardingEvent>((event, emit) async {
       await prefs.setBool(FINISHED_ON_BOARDING, true);
       emit(const AuthenticationState.unauthenticated());
     });
-    on<LoginWithEmailAndPasswordEvent>((event, emit) async {
-      dynamic result = await FireStoreUtils.loginWithEmailAndPassword(
-          event.email, event.password);
-      if (result != null && result is User) {
-        user = result;
+
+    on<SignupWithEmailAndPasswordEvent>((event, emit) async {
+    dynamic result = await registerWithAPI(
+        '${event.firstName} ${event.lastName!}',
+        event.emailAddress,
+        event.password,
+        event.cellphone!,
+        event.dni!);
+
+
+      if (result != null && result is String) {
+        await setToken(result);
+        user = User(email: event.emailAddress);
         emit(AuthenticationState.authenticated(user!));
-      } else if (result != null && result is String) {
-        emit(AuthenticationState.unauthenticated(message: result));
       } else {
-        emit(const AuthenticationState.unauthenticated(
-            message: 'Login failed, Please try again.'));
-      }
-    });
-    on<LoginWithFacebookEvent>((event, emit) async {
-      dynamic result = await FireStoreUtils.loginWithFacebook();
-      if (result != null && result is User) {
-        user = result;
-        emit(AuthenticationState.authenticated(user!));
-      } else if (result != null && result is String) {
-        emit(AuthenticationState.unauthenticated(message: result));
-      } else {
-        emit(const AuthenticationState.unauthenticated(
-            message: 'Facebook login failed, Please try again.'));
-      }
-    });
-    on<LoginWithAppleEvent>((event, emit) async {
-      dynamic result = await FireStoreUtils.loginWithApple();
-      if (result != null && result is User) {
-        user = result;
-        emit(AuthenticationState.authenticated(user!));
-      } else if (result != null && result is String) {
-        emit(AuthenticationState.unauthenticated(message: result));
-      } else {
-        emit(const AuthenticationState.unauthenticated(
-            message: 'Apple login failed, Please try again.'));
+        emit(AuthenticationState.unauthenticated(
+            message: result is String ? result : 'No se pudo unir.'));
       }
     });
 
-    on<LoginWithPhoneNumberEvent>((event, emit) async {
-      dynamic result =
-          await FireStoreUtils.loginOrCreateUserWithPhoneNumberCredential(
-              credential: event.credential,
-              phoneNumber: event.phoneNumber,
-              firstName: event.firstName,
-              lastName: event.lastName,
-              image: event.image);
-      if (result is User) {
-        user = result;
-        emit(AuthenticationState.authenticated(result));
-      } else if (result is String) {
-        emit(AuthenticationState.unauthenticated(message: result));
-      }
-    });
-    on<SignupWithEmailAndPasswordEvent>((event, emit) async {
-      dynamic result = await FireStoreUtils.signUpWithEmailAndPassword(
-          emailAddress: event.emailAddress,
-          password: event.password,
-          image: event.image,
-          firstName: event.firstName,
-          lastName: event.lastName);
-      if (result != null && result is User) {
-        user = result;
+    on<LoginWithEmailAndPasswordEvent>((event, emit) async {
+      dynamic result = await loginWithAPI(event.email, event.password);
+      if (result != null && result is String) {
+        await setToken(result);
+        user = User(email: event.email);
         emit(AuthenticationState.authenticated(user!));
-      } else if (result != null && result is String) {
-        emit(AuthenticationState.unauthenticated(message: result));
       } else {
-        emit(const AuthenticationState.unauthenticated(
-            message: 'Couldn\'t sign up'));
+        emit(AuthenticationState.unauthenticated(
+            message: result is String
+                ? result
+                : 'Fallo el inicio, Por favor vuelva a intentarlo.'));
       }
     });
+
     on<LogoutEvent>((event, emit) async {
-      await FireStoreUtils.logout();
+      await removeToken();
       user = null;
       emit(const AuthenticationState.unauthenticated());
     });
+  }
+
+  Future<dynamic> loginWithAPI(String email, String password) async {
+    final response = await http.post(
+      Uri.parse('https://appemergencia.com/api/login'),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode({'email': email, 'password': password}),
+    );
+
+    if (response.statusCode == 200) {
+      Map<String, dynamic> jsonResponse = jsonDecode(response.body);
+      return jsonResponse['access_token'];
+    } else {
+      try {
+        final error = jsonDecode(response.body);
+        return error['message'] ?? 'Error inesperado.';
+      } catch (e) {
+        return 'Error inesperado.';
+      }
+    }
+  }
+
+  Future<dynamic> registerWithAPI(String name, String email, String password,
+      String celular, String dni) async {
+    final response = await http.post(
+      Uri.parse('https://appemergencia.com/api/register'),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode({
+        'name': name,
+        'email': email,
+        'password': password,
+        'celular': celular,
+        'dni': dni
+      }),
+    );
+
+    if (response.statusCode == 200) {
+      Map<String, dynamic> jsonResponse = jsonDecode(response.body);
+      return jsonResponse['access_token'];
+    } else {
+      try {
+        final error = jsonDecode(response.body);
+        return error['message'] ?? 'Error inesperado.';
+      } catch (e) {
+        return 'Error inesperado.';
+      }
+    }
+  }
+
+  Future<void> setToken(String token) async {
+    prefs = await SharedPreferences.getInstance();
+    await prefs.setString('access_token', token);
+  }
+
+  Future<String?> getToken() async {
+    prefs = await SharedPreferences.getInstance();
+    return prefs.getString('access_token');
+  }
+
+  Future<void> removeToken() async {
+    prefs = await SharedPreferences.getInstance();
+    prefs.remove('access_token');
   }
 }
