@@ -5,11 +5,17 @@ import 'package:app_emergen/services/authenticate.dart';
 part 'reset_password_state.dart';
 
 class ResetPasswordCubit extends Cubit<ResetPasswordState> {
+  final UserAuthentication _userAuthentication = UserAuthentication();
+
   ResetPasswordCubit() : super(ResetPasswordInitial());
 
   resetPassword(String email) async {
-    await FireStoreUtils.resetPassword(email);
-    emit(ResetPasswordDone());
+    try {
+      await _userAuthentication.resetPassword(email);
+      emit(ResetPasswordDone());
+    } catch (error) {
+      emit(ResetPasswordFailureState(errorMessage: error.toString()));
+    }
   }
 
   checkValidField(GlobalKey<FormState> key) {

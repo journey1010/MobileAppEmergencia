@@ -52,7 +52,7 @@ class AuthenticationBloc
         emit(AuthenticationState.authenticated(user!));
       } else {
         emit(AuthenticationState.unauthenticated(
-            message: result is String ? result : 'No se pudo unir.'));
+            message: result is String ? result : 'No se pudo registrar, vuelva a intentar.'));
       }
     });
 

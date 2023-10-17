@@ -52,7 +52,7 @@ class _HomeState extends State<HomeScreen> {
               ),
               ListTile(
                 title: const Text(
-                  'Logout',
+                  'Salir',
                   style: TextStyle(color: Colors.black),
                 ),
                 leading: Transform.rotate(
@@ -67,7 +67,7 @@ class _HomeState extends State<HomeScreen> {
         ),
         appBar: AppBar(
           title: const Text(
-            'Home',
+            'Inicio',
             style: TextStyle(color: Colors.black),
           ),
           iconTheme: const IconThemeData(color: Colors.black),

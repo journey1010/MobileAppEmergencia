@@ -45,7 +45,7 @@ class WelcomeScreen extends StatelessWidget {
                     padding: EdgeInsets.only(
                         left: 16, top: 32, right: 16, bottom: 8),
                     child: Text(
-                      'Say Hello To Your New App!',
+                      'Bienvenido ciudadano!',
                       textAlign: TextAlign.center,
                       style: TextStyle(
                           color: Color(COLOR_PRIMARY),
@@ -56,7 +56,7 @@ class WelcomeScreen extends StatelessWidget {
                   const Padding(
                     padding: EdgeInsets.symmetric(horizontal: 40, vertical: 16),
                     child: Text(
-                      'You\'ve just saved a week of development and headaches.',
+                      'AppEmergencia te permite compartir tu localización y alertar a los servicios de emergencia, como bomberos, policías o ambulancias.',
                       style: TextStyle(fontSize: 18),
                       textAlign: TextAlign.center,
                     ),
@@ -66,7 +66,7 @@ class WelcomeScreen extends StatelessWidget {
                         const EdgeInsets.only(right: 40.0, left: 40.0, top: 40),
                     child: ElevatedButton(
                       style: ElevatedButton.styleFrom(
-                        primary: const Color(COLOR_PRIMARY),
+                        backgroundColor: const Color(COLOR_PRIMARY),
                         textStyle: const TextStyle(color: Colors.white),
                         padding: const EdgeInsets.only(top: 12, bottom: 12),
                         shape: RoundedRectangleBorder(
@@ -75,7 +75,7 @@ class WelcomeScreen extends StatelessWidget {
                                 const BorderSide(color: Color(COLOR_PRIMARY))),
                       ),
                       child: const Text(
-                        'Log In',
+                        'Iniciar sesión',
                         style: TextStyle(
                             fontSize: 20, fontWeight: FontWeight.bold),
                       ),
@@ -89,7 +89,7 @@ class WelcomeScreen extends StatelessWidget {
                         right: 40.0, left: 40.0, top: 20, bottom: 20),
                     child: TextButton(
                       child: const Text(
-                        'Sign Up',
+                        'Únete',
                         style: TextStyle(
                             fontSize: 20,
                             fontWeight: FontWeight.bold,

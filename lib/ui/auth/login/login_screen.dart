@@ -10,7 +10,6 @@ import 'package:app_emergen/ui/auth/login/login_bloc.dart';
 import 'package:app_emergen/ui/auth/resetPasswordScreen/reset_password_screen.dart';
 import 'package:app_emergen/ui/home/home_screen.dart';
 import 'package:app_emergen/ui/loading_cubit.dart';
-import 'package:the_apple_sign_in/the_apple_sign_in.dart' as apple;
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -47,8 +46,9 @@ class _LoginScreen extends State<LoginScreen> {
                     pushAndRemoveUntil(
                         context, HomeScreen(user: state.user!), false);
                   } else {
-                    showSnackBar(context,
-                        state.message ?? 'Couldn\'t login, Please try again.');
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text(state.message ?? 'No puedo conectarse, Intente otra vez.')),
+                    );
                   }
                 },
               ),
@@ -56,7 +56,7 @@ class _LoginScreen extends State<LoginScreen> {
                 listener: (context, state) {
                   if (state is ValidLoginFields) {
                     context.read<LoadingCubit>().showLoading(
-                        context, 'Logging in, Please wait...', false);
+                        context, 'Iniciando, Por favor espere...', false);
                     context.read<AuthenticationBloc>().add(
                           LoginWithEmailAndPasswordEvent(
                             email: email!,
@@ -83,7 +83,7 @@ class _LoginScreen extends State<LoginScreen> {
                         padding: EdgeInsets.only(
                             top: 32.0, right: 16.0, left: 16.0),
                         child: Text(
-                          'Sign In',
+                          'Complete los campos',
                           style: TextStyle(
                               color: Color(COLOR_PRIMARY),
                               fontSize: 25.0,
@@ -104,9 +104,9 @@ class _LoginScreen extends State<LoginScreen> {
                             keyboardType: TextInputType.emailAddress,
                             cursorColor: const Color(COLOR_PRIMARY),
                             decoration: getInputDecoration(
-                                hint: 'Email Address',
+                                hint: 'Correo electrónico',
                                 darkMode: isDarkMode(context),
-                                errorColor: Theme.of(context).errorColor)),
+                                errorColor: Theme.of(context).colorScheme.error)),
                       ),
                       Padding(
                         padding: const EdgeInsets.only(
@@ -125,14 +125,14 @@ class _LoginScreen extends State<LoginScreen> {
                             style: const TextStyle(fontSize: 18.0),
                             cursorColor: const Color(COLOR_PRIMARY),
                             decoration: getInputDecoration(
-                                hint: 'Password',
+                                hint: 'Contraseña',
                                 darkMode: isDarkMode(context),
-                                errorColor: Theme.of(context).errorColor)),
+                                errorColor: Theme.of(context).colorScheme.error)),
                       ),
 
                       /// forgot password text, navigates user to ResetPasswordScreen
                       /// and this is only visible when logging with email and password
-                      Padding(
+/*                      Padding(
                         padding: const EdgeInsets.only(top: 16, right: 24),
                         child: Align(
                           alignment: Alignment.centerRight,
@@ -140,7 +140,7 @@ class _LoginScreen extends State<LoginScreen> {
                             onTap: () =>
                                 push(context, const ResetPasswordScreen()),
                             child: const Text(
-                              'Forgot password?',
+                              'Olvidó sus contraseña?',
                               style: TextStyle(
                                   color: Colors.lightBlue,
                                   fontWeight: FontWeight.bold,
@@ -150,23 +150,22 @@ class _LoginScreen extends State<LoginScreen> {
                           ),
                         ),
                       ),
-
+*/
                       Padding(
                         padding: const EdgeInsets.only(
                             right: 40.0, left: 40.0, top: 40),
                         child: ElevatedButton(
                           style: ElevatedButton.styleFrom(
-                            padding: const EdgeInsets.only(top: 12, bottom: 12),
+                            padding: const EdgeInsets.only(top: 12, bottom: 12), backgroundColor: const Color(COLOR_PRIMARY),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(25.0),
                               side: const BorderSide(
                                 color: Color(COLOR_PRIMARY),
                               ),
                             ),
-                            primary: const Color(COLOR_PRIMARY),
                           ),
                           child: const Text(
-                            'Log In',
+                            'Iniciar',
                             style: TextStyle(
                               fontSize: 20,
                               fontWeight: FontWeight.bold,
@@ -177,87 +176,6 @@ class _LoginScreen extends State<LoginScreen> {
                               .read<LoginBloc>()
                               .add(ValidateLoginFieldsEvent(_key)),
                         ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(32.0),
-                        child: Center(
-                          child: Text(
-                            'OR',
-                            style: TextStyle(
-                                color: isDarkMode(context)
-                                    ? Colors.white
-                                    : Colors.black),
-                          ),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(
-                            right: 40.0, left: 40.0, bottom: 20),
-                        child: ElevatedButton.icon(
-                          label: const Text(
-                            'Facebook Login',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white),
-                          ),
-                          icon: Image.asset(
-                            'assets/images/facebook_logo.png',
-                            color: Colors.white,
-                            height: 24,
-                            width: 24,
-                          ),
-                          style: ElevatedButton.styleFrom(
-                            padding: const EdgeInsets.symmetric(vertical: 12),
-                            primary: const Color(FACEBOOK_BUTTON_COLOR),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(25.0),
-                              side: const BorderSide(
-                                color: Color(FACEBOOK_BUTTON_COLOR),
-                              ),
-                            ),
-                          ),
-                          onPressed: () {
-                            context.read<LoadingCubit>().showLoading(
-                                context, 'Logging in, Please wait...', false);
-                            context.read<AuthenticationBloc>().add(
-                                  LoginWithFacebookEvent(),
-                                );
-                          },
-                        ),
-                      ),
-                      FutureBuilder<bool>(
-                        future: apple.TheAppleSignIn.isAvailable(),
-                        builder: (context, snapshot) {
-                          if (snapshot.connectionState ==
-                              ConnectionState.waiting) {
-                            return const CircularProgressIndicator.adaptive();
-                          }
-                          if (!snapshot.hasData || (snapshot.data != true)) {
-                            return Container();
-                          } else {
-                            return Padding(
-                              padding: const EdgeInsets.only(
-                                  right: 40.0, left: 40.0, bottom: 20),
-                              child: apple.AppleSignInButton(
-                                  cornerRadius: 25.0,
-                                  type: apple.ButtonType.signIn,
-                                  style: isDarkMode(context)
-                                      ? apple.ButtonStyle.white
-                                      : apple.ButtonStyle.black,
-                                  onPressed: () {
-                                    context.read<LoadingCubit>().showLoading(
-                                        context,
-                                        'Logging in, Please wait...',
-                                        false);
-                                    context.read<AuthenticationBloc>().add(
-                                          LoginWithAppleEvent(),
-                                        );
-                                  }),
-                            );
-                          }
-                        },
                       ),
                     ],
                   ),
