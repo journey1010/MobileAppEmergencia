@@ -96,7 +96,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                                 .add(FinishedOnBoardingEvent());
                           },
                           child: const Text(
-                            'Continue',
+                            'Continuar',
                             style: TextStyle(
                                 fontSize: 14.0,
                                 color: Colors.white,

@@ -7,7 +7,7 @@ import 'package:app_emergen/constants.dart';
 import 'package:app_emergen/services/helper.dart';
 import 'package:app_emergen/ui/auth/authentication_bloc.dart';
 import 'package:app_emergen/ui/auth/login/login_bloc.dart';
-import 'package:app_emergen/ui/auth/resetPasswordScreen/reset_password_screen.dart';
+//import 'package:app_emergen/ui/auth/resetPasswordScreen/reset_password_screen.dart';
 import 'package:app_emergen/ui/home/home_screen.dart';
 import 'package:app_emergen/ui/loading_cubit.dart';
 

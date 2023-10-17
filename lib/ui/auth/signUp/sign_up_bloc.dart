@@ -40,10 +40,10 @@ class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
           emit(ValidFields());
         } else {
           emit(SignUpFailureState(
-              errorMessage: 'Please accept our terms of use.'));
+              errorMessage: 'Por favor acepte nuestras condiciones.'));
         }
       } else {
-        emit(SignUpFailureState(errorMessage: 'Please fill required fields.'));
+        emit(SignUpFailureState(errorMessage: 'Complete los campos requeridos.'));
       }
     });
 

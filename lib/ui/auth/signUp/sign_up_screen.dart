@@ -34,9 +34,7 @@ class _SignUpState extends State<SignUpScreen> {
       create: (context) => SignUpBloc(),
       child: Builder(
         builder: (context) {
-          if (Platform.isAndroid) {
             context.read<SignUpBloc>().add(RetrieveLostDataEvent());
-          }
           return MultiBlocListener(
             listeners: [
               BlocListener<AuthenticationBloc, AuthenticationState>(
@@ -49,7 +47,7 @@ class _SignUpState extends State<SignUpScreen> {
                     showSnackBar(
                         context,
                         state.message ??
-                            'Couldn\'t sign up, Please try again.');
+                            'No se pudo unir, Intente otra vez.');
                   }
                 },
               ),
@@ -57,7 +55,7 @@ class _SignUpState extends State<SignUpScreen> {
                 listener: (context, state) {
                   if (state is ValidFields) {
                     context.read<LoadingCubit>().showLoading(
-                        context, 'Creating new account, Please wait...', false);
+                        context, 'Creando nueva cuenta, por favor espere.', false);
                     context.read<AuthenticationBloc>().add(
                         SignupWithEmailAndPasswordEvent(
                             emailAddress: email!,
@@ -95,7 +93,7 @@ class _SignUpState extends State<SignUpScreen> {
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
                           const Text(
-                            'Create new account',
+                            'Crear una cuenta nueva',
                             style: TextStyle(
                                 color: Color(COLOR_PRIMARY),
                                 fontWeight: FontWeight.bold,
@@ -124,7 +122,7 @@ class _SignUpState extends State<SignUpScreen> {
                                                   BorderRadius.circular(65),
                                               child: state.imageFile == null
                                                   ? Image.asset(
-                                                      'assets/images/placeholder.jpg',
+                                                      'placeholder.jpg',
                                                       fit: BoxFit.cover,
                                                     )
                                                   : Image.file(
@@ -140,7 +138,7 @@ class _SignUpState extends State<SignUpScreen> {
                                               borderRadius:
                                                   BorderRadius.circular(65),
                                               child: Image.asset(
-                                                'assets/images/placeholder.jpg',
+                                                'placeholder.jpg',
                                                 fit: BoxFit.cover,
                                               ),
                                             ),
@@ -175,9 +173,9 @@ class _SignUpState extends State<SignUpScreen> {
                               },
                               textInputAction: TextInputAction.next,
                               decoration: getInputDecoration(
-                                  hint: 'First Name',
+                                  hint: 'Nombre completo',
                                   darkMode: isDarkMode(context),
-                                  errorColor: Theme.of(context).errorColor),
+                                  errorColor: Theme.of(context).colorScheme.error),
                             ),
                           ),
                           Padding(
@@ -193,7 +191,7 @@ class _SignUpState extends State<SignUpScreen> {
                               decoration: getInputDecoration(
                                   hint: 'Last Name',
                                   darkMode: isDarkMode(context),
-                                  errorColor: Theme.of(context).errorColor),
+                                  errorColor: Theme.of(context).colorScheme.error),
                             ),
                           ),
                           Padding(
@@ -207,9 +205,9 @@ class _SignUpState extends State<SignUpScreen> {
                                 email = val;
                               },
                               decoration: getInputDecoration(
-                                  hint: 'Email',
+                                  hint: 'Correo Electrónico',
                                   darkMode: isDarkMode(context),
-                                  errorColor: Theme.of(context).errorColor),
+                                  errorColor: Theme.of(context).colorScheme.error),
                             ),
                           ),
                           Padding(
@@ -227,9 +225,9 @@ class _SignUpState extends State<SignUpScreen> {
                                   const TextStyle(height: 0.8, fontSize: 18.0),
                               cursorColor: const Color(COLOR_PRIMARY),
                               decoration: getInputDecoration(
-                                  hint: 'Password',
+                                  hint: 'Contraseña',
                                   darkMode: isDarkMode(context),
-                                  errorColor: Theme.of(context).errorColor),
+                                  errorColor: Theme.of(context).colorScheme.error),
                             ),
                           ),
                           Padding(
@@ -252,9 +250,9 @@ class _SignUpState extends State<SignUpScreen> {
                                   const TextStyle(height: 0.8, fontSize: 18.0),
                               cursorColor: const Color(COLOR_PRIMARY),
                               decoration: getInputDecoration(
-                                  hint: 'Confirm Password',
+                                  hint: 'Confirmar contraseña',
                                   darkMode: isDarkMode(context),
-                                  errorColor: Theme.of(context).errorColor),
+                                  errorColor: Theme.of(context).colorScheme.error),
                             ),
                           ),
                           Padding(
@@ -262,7 +260,7 @@ class _SignUpState extends State<SignUpScreen> {
                                 right: 40.0, left: 40.0, top: 40.0),
                             child: ElevatedButton(
                               style: ElevatedButton.styleFrom(
-                                primary: const Color(COLOR_PRIMARY),
+                                backgroundColor: const Color(COLOR_PRIMARY),
                                 padding:
                                     const EdgeInsets.only(top: 12, bottom: 12),
                                 shape: RoundedRectangleBorder(
@@ -273,7 +271,7 @@ class _SignUpState extends State<SignUpScreen> {
                                 ),
                               ),
                               child: const Text(
-                                'Sign Up',
+                                'Únete',
                                 style: TextStyle(
                                   fontSize: 20,
                                   fontWeight: FontWeight.bold,
@@ -356,7 +354,7 @@ class _SignUpState extends State<SignUpScreen> {
       ),
       actions: [
         CupertinoActionSheetAction(
-          child: const Text('Choose from gallery'),
+          child: const Text('Escoja una imagen de su galería'),
           isDefaultAction: false,
           onPressed: () async {
             Navigator.pop(context);
@@ -364,7 +362,7 @@ class _SignUpState extends State<SignUpScreen> {
           },
         ),
         CupertinoActionSheetAction(
-          child: const Text('Take a picture'),
+          child: const Text('Tome una foto'),
           isDestructiveAction: false,
           onPressed: () async {
             Navigator.pop(context);
@@ -373,7 +371,7 @@ class _SignUpState extends State<SignUpScreen> {
         )
       ],
       cancelButton: CupertinoActionSheetAction(
-          child: const Text('Cancel'), onPressed: () => Navigator.pop(context)),
+          child: const Text('Cancelar'), onPressed: () => Navigator.pop(context)),
     );
     showCupertinoModalPopup(context: context, builder: (context) => action);
   }
