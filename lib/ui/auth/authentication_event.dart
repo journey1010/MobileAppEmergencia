@@ -12,7 +12,6 @@ class LoginWithEmailAndPasswordEvent extends AuthenticationEvent {
 class SignupWithEmailAndPasswordEvent extends AuthenticationEvent {
   final String emailAddress;
   final String password;
-  final File? image;
   final String? firstName, lastName;
   final String? dni;         
   final String? cellphone; 
@@ -20,11 +19,10 @@ class SignupWithEmailAndPasswordEvent extends AuthenticationEvent {
   SignupWithEmailAndPasswordEvent({
     required this.emailAddress,
     required this.password,
-    this.image,
     this.firstName = 'Anonymous',
     this.lastName = 'User',
-    this.dni,               
-    this.cellphone,      
+    required this.dni,               
+    required this.cellphone,      
   });
 }
 

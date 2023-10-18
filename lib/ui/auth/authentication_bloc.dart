@@ -38,13 +38,13 @@ class AuthenticationBloc
     });
 
     on<SignupWithEmailAndPasswordEvent>((event, emit) async {
-    dynamic result = await registerWithAPI(
+      dynamic result = await registerWithAPI(
         '${event.firstName} ${event.lastName!}',
         event.emailAddress,
         event.password,
         event.cellphone!,
-        event.dni!);
-
+        event.dni!,
+      );
 
       if (result != null && result is String) {
         await setToken(result);
@@ -78,11 +78,12 @@ class AuthenticationBloc
   }
 
   Future<dynamic> loginWithAPI(String email, String password) async {
-    final response = await http.post(
-      Uri.parse('https://appemergencia.com/api/login'),
-      headers: {'Content-Type': 'application/json'},
-      body: jsonEncode({'email': email, 'password': password}),
-    );
+    final uri = Uri.parse('https://appemergencias.regionloreto.gob.pe/api/login');
+    final request = http.MultipartRequest('POST', uri);
+    request.fields['email'] = email;
+    request.fields['password'] = password;
+
+    final response = await http.Response.fromStream(await request.send());
 
     if (response.statusCode == 200) {
       Map<String, dynamic> jsonResponse = jsonDecode(response.body);
@@ -97,27 +98,28 @@ class AuthenticationBloc
     }
   }
 
-  Future<dynamic> registerWithAPI(String name, String email, String password,
-      String celular, String dni) async {
-    final response = await http.post(
-      Uri.parse('https://appemergencia.com/api/register'),
-      headers: {'Content-Type': 'application/json'},
-      body: jsonEncode({
-        'name': name,
-        'email': email,
-        'password': password,
-        'celular': celular,
-        'dni': dni
-      }),
-    );
+  Future<dynamic> registerWithAPI(String name, String email, String password, String celular, String dni) async {
+    final uri = Uri.parse('https://appemergencias.regionloreto.gob.pe/api/register');
+    final request = http.MultipartRequest('POST', uri);
+    request.fields['name'] = name;
+    request.fields['email'] = email;
+    request.fields['password'] = password;
+    request.fields['celular'] = celular;
+    request.fields['dni'] = dni;
 
-    if (response.statusCode == 200) {
-      Map<String, dynamic> jsonResponse = jsonDecode(response.body);
-      return jsonResponse['access_token'];
+    final response = await http.Response.fromStream(await request.send());
+
+    Map<String, dynamic> jsonResponse = jsonDecode(response.body);
+
+    if (jsonResponse.containsKey('access_token')) {
+      final token = jsonResponse['access_token'];
+      await setToken(token);
+      user = User(email: email);
+      return token;
     } else {
       try {
-        final error = jsonDecode(response.body);
-        return error['message'] ?? 'Error inesperado.';
+        final error = jsonResponse['message'] ?? 'Error inesperado.';
+        return error;
       } catch (e) {
         return 'Error inesperado.';
       }

@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -21,10 +19,9 @@ class SignUpScreen extends StatefulWidget {
 }
 
 class _SignUpState extends State<SignUpScreen> {
-  File? _image;
   final TextEditingController _passwordController = TextEditingController();
   final GlobalKey<FormState> _key = GlobalKey();
-  String? firstName, lastName, email, password, confirmPassword;
+  String? firstName, lastName, email, password, confirmPassword, dni, cellphone;
   AutovalidateMode _validate = AutovalidateMode.disabled;
   bool acceptEULA = false;
 
@@ -34,7 +31,6 @@ class _SignUpState extends State<SignUpScreen> {
       create: (context) => SignUpBloc(),
       child: Builder(
         builder: (context) {
-            context.read<SignUpBloc>().add(RetrieveLostDataEvent());
           return MultiBlocListener(
             listeners: [
               BlocListener<AuthenticationBloc, AuthenticationState>(
@@ -60,9 +56,10 @@ class _SignUpState extends State<SignUpScreen> {
                         SignupWithEmailAndPasswordEvent(
                             emailAddress: email!,
                             password: password!,
-                            image: _image,
                             lastName: lastName,
-                            firstName: firstName));
+                            firstName: firstName,
+                            cellphone: cellphone,
+                            dni: dni));
                   } else if (state is SignUpFailureState) {
                     showSnackBar(context, state.errorMessage);
                   }
@@ -101,69 +98,6 @@ class _SignUpState extends State<SignUpScreen> {
                           ),
                           Padding(
                             padding: const EdgeInsets.only(
-                                left: 8.0, top: 32, right: 8, bottom: 8),
-                            child: Stack(
-                              alignment: Alignment.bottomCenter,
-                              children: <Widget>[
-                                BlocBuilder<SignUpBloc, SignUpState>(
-                                  buildWhen: (old, current) =>
-                                      current is PictureSelectedState &&
-                                      old != current,
-                                  builder: (context, state) {
-                                    if (state is PictureSelectedState) {
-                                      _image = state.imageFile;
-                                    }
-                                    return state is PictureSelectedState
-                                        ? SizedBox(
-                                            height: 130,
-                                            width: 130,
-                                            child: ClipRRect(
-                                              borderRadius:
-                                                  BorderRadius.circular(65),
-                                              child: state.imageFile == null
-                                                  ? Image.asset(
-                                                      'placeholder.jpg',
-                                                      fit: BoxFit.cover,
-                                                    )
-                                                  : Image.file(
-                                                      state.imageFile!,
-                                                      fit: BoxFit.cover,
-                                                    ),
-                                            ),
-                                          )
-                                        : SizedBox(
-                                            height: 130,
-                                            width: 130,
-                                            child: ClipRRect(
-                                              borderRadius:
-                                                  BorderRadius.circular(65),
-                                              child: Image.asset(
-                                                'placeholder.jpg',
-                                                fit: BoxFit.cover,
-                                              ),
-                                            ),
-                                          );
-                                  },
-                                ),
-                                Positioned(
-                                  right: 110,
-                                  child: FloatingActionButton(
-                                    backgroundColor: const Color(COLOR_PRIMARY),
-                                    child: Icon(
-                                      Icons.camera_alt,
-                                      color: isDarkMode(context)
-                                          ? Colors.black
-                                          : Colors.white,
-                                    ),
-                                    mini: true,
-                                    onPressed: () => _onCameraClick(context),
-                                  ),
-                                )
-                              ],
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(
                                 top: 16.0, right: 8.0, left: 8.0),
                             child: TextFormField(
                               textCapitalization: TextCapitalization.words,
@@ -173,7 +107,7 @@ class _SignUpState extends State<SignUpScreen> {
                               },
                               textInputAction: TextInputAction.next,
                               decoration: getInputDecoration(
-                                  hint: 'Nombre completo',
+                                  hint: 'Nombres',
                                   darkMode: isDarkMode(context),
                                   errorColor: Theme.of(context).colorScheme.error),
                             ),
@@ -189,7 +123,7 @@ class _SignUpState extends State<SignUpScreen> {
                               },
                               textInputAction: TextInputAction.next,
                               decoration: getInputDecoration(
-                                  hint: 'Last Name',
+                                  hint: 'Apellidos',
                                   darkMode: isDarkMode(context),
                                   errorColor: Theme.of(context).colorScheme.error),
                             ),
@@ -210,6 +144,50 @@ class _SignUpState extends State<SignUpScreen> {
                                   errorColor: Theme.of(context).colorScheme.error),
                             ),
                           ),
+                          Padding(
+                            padding: const EdgeInsets.only(
+                                top: 16.0, right: 8.0, left: 8.0),
+                            child: TextFormField(
+                              keyboardType: TextInputType.text, 
+                              textInputAction: TextInputAction.next,
+                              validator: (val) {
+                                if (val == null || val.isEmpty) {
+                                  return 'Por favor ingrese su DNI';
+                                }
+                                return null;
+                              },
+                              onSaved: (String? val) {
+                                dni = val;
+                              },
+                              decoration: getInputDecoration(
+                                  hint: 'DNI',
+                                  darkMode: isDarkMode(context),
+                                  errorColor: Theme.of(context).colorScheme.error),
+                            ),
+                          ),
+
+                          Padding(
+                            padding: const EdgeInsets.only(
+                                top: 16.0, right: 8.0, left: 8.0),
+                            child: TextFormField(
+                              keyboardType: TextInputType.text, // Cambia el tipo según sea necesario
+                              textInputAction: TextInputAction.next,
+                              validator: (val) {
+                                if (val == null || val.isEmpty) {
+                                  return 'Por favor ingrese su número de celular';
+                                }
+                                return null;
+                              },
+                              onSaved: (String? val) {
+                                cellphone = val;
+                              },
+                              decoration: getInputDecoration(
+                                  hint: 'Número de celular',
+                                  darkMode: isDarkMode(context),
+                                  errorColor: Theme.of(context).colorScheme.error),
+                            ),
+                          ),
+
                           Padding(
                             padding: const EdgeInsets.only(
                                 top: 16.0, right: 8.0, left: 8.0),
@@ -311,14 +289,14 @@ class _SignUpState extends State<SignUpScreen> {
                                 children: [
                                   const TextSpan(
                                     text:
-                                        'By creating an account you agree to our\n',
+                                        'Al crear una cuenta aceptas nuestros terminos de uso.',
                                     style: TextStyle(color: Colors.grey),
                                   ),
                                   TextSpan(
                                     style: const TextStyle(
                                       color: Colors.blueAccent,
                                     ),
-                                    text: 'Terms of Use',
+                                    text: 'Terminos de uso.',
                                     recognizer: TapGestureRecognizer()
                                       ..onTap = () async {
                                         if (await canLaunch(EULA)) {
@@ -346,40 +324,9 @@ class _SignUpState extends State<SignUpScreen> {
     );
   }
 
-  _onCameraClick(BuildContext context) {
-    final action = CupertinoActionSheet(
-      title: const Text(
-        'Add Profile Picture',
-        style: TextStyle(fontSize: 15.0),
-      ),
-      actions: [
-        CupertinoActionSheetAction(
-          child: const Text('Escoja una imagen de su galería'),
-          isDefaultAction: false,
-          onPressed: () async {
-            Navigator.pop(context);
-            context.read<SignUpBloc>().add(ChooseImageFromGalleryEvent());
-          },
-        ),
-        CupertinoActionSheetAction(
-          child: const Text('Tome una foto'),
-          isDestructiveAction: false,
-          onPressed: () async {
-            Navigator.pop(context);
-            context.read<SignUpBloc>().add(CaptureImageByCameraEvent());
-          },
-        )
-      ],
-      cancelButton: CupertinoActionSheetAction(
-          child: const Text('Cancelar'), onPressed: () => Navigator.pop(context)),
-    );
-    showCupertinoModalPopup(context: context, builder: (context) => action);
-  }
-
   @override
   void dispose() {
     _passwordController.dispose();
-    _image = null;
     super.dispose();
   }
 }

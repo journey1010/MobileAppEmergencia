@@ -11,14 +11,14 @@ class User {
   String dni;
 
   User({
-      this.email = '',
-      this.firstName = '',
-      this.lastName = '',
-      this.userID = '',
-      this.profilePictureURL = '',
-      this.cellphone = '', 
-      this.dni = '', 
-  }) : appIdentifier = 'Flutter Login Screen ${Platform.operatingSystem}';
+    this.email = '',
+    this.firstName = '',
+    this.lastName = '',
+    this.userID = '',
+    this.profilePictureURL = '',
+    this.cellphone = '',
+    this.dni = '',
+  }) : appIdentifier = 'Flutter Login Screen';
 
   String fullName() => '$firstName $lastName';
 
