@@ -4,7 +4,7 @@ import 'package:http/http.dart' as http;
 import 'package:bloc/bloc.dart';
 import 'package:app_emergen/constants.dart';
 import 'package:app_emergen/model/user.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 part 'authentication_event.dart';
 part 'authentication_state.dart';
@@ -12,28 +12,35 @@ part 'authentication_state.dart';
 class AuthenticationBloc
     extends Bloc<AuthenticationEvent, AuthenticationState> {
   User? user;
-  late SharedPreferences prefs;
+  final storage = FlutterSecureStorage();
   late bool finishedOnBoarding;
 
   AuthenticationBloc({this.user})
       : super(const AuthenticationState.unauthenticated()) {
     on<CheckFirstRunEvent>((event, emit) async {
-      prefs = await SharedPreferences.getInstance();
-      finishedOnBoarding = prefs.getBool(FINISHED_ON_BOARDING) ?? false;
+      String? finishedOnBoardingStr = await storage.read(key: FINISHED_ON_BOARDING);
+      finishedOnBoarding = finishedOnBoardingStr == 'true';
       if (!finishedOnBoarding) {
         emit(const AuthenticationState.onboarding());
       } else {
-        String? token = await getToken();
-        if (token == null) {
-          emit(const AuthenticationState.unauthenticated());
+        Map<String, String>? credentialsAndToken = await getCredentialsAndToken();
+        if (credentialsAndToken != null) {
+          String? token = credentialsAndToken['access_token'];
+          if (token == null) {
+            emit(const AuthenticationState.unauthenticated());
+          } else {
+            String email = credentialsAndToken['email']!;
+            user = User(email: email);
+            emit(AuthenticationState.authenticated(user!));
+          }
         } else {
-          emit(AuthenticationState.authenticated(user!));
+          emit(const AuthenticationState.unauthenticated());
         }
       }
     });
 
     on<FinishedOnBoardingEvent>((event, emit) async {
-      await prefs.setBool(FINISHED_ON_BOARDING, true);
+      await storage.write(key: FINISHED_ON_BOARDING, value: 'true');
       emit(const AuthenticationState.unauthenticated());
     });
 
@@ -54,50 +61,62 @@ class AuthenticationBloc
       } else {
         emit(AuthenticationState.unauthenticated(
             message: result is String
-                ? result
+                ? 'No se pudo registrar, vuelva a intentar.'
                 : 'No se pudo registrar, vuelva a intentar.'));
       }
     });
 
     on<LoginWithEmailAndPasswordEvent>((event, emit) async {
-      dynamic result = await loginWithAPI(event.email, event.password);
-      if (result != null && result is String) {
-        await setToken(result);
+      Map<String, String>? credentialsAndToken = await getCredentialsAndToken();
+      String? bearerToken = credentialsAndToken?['token'];
+
+      dynamic result =
+          await loginWithAPI(event.email, event.password, bearerToken);
+      if (result != null && result is String && result != 'false')  {
+        await setOperationToken(result);
         user = User(email: event.email);
         emit(AuthenticationState.authenticated(user!));
       } else {
         emit(AuthenticationState.unauthenticated(
             message: result is String
-                ? result
+                ? 'Fallo el inicio, Por favor vuelva a intentarlo.'
                 : 'Fallo el inicio, Por favor vuelva a intentarlo.'));
       }
     });
 
     on<LogoutEvent>((event, emit) async {
       await removeCredentials();
+      await storage.delete(key: FINISHED_ON_BOARDING); 
       user = null;
       emit(const AuthenticationState.unauthenticated());
     });
   }
 
-  Future<dynamic> loginWithAPI(String email, String password) async {
+  Future<dynamic> loginWithAPI(String email, String password,
+      [String? bearerToken]) async {
     final uri =
         Uri.parse('https://appemergencias.regionloreto.gob.pe/api/login');
-    final request = http.MultipartRequest('POST', uri);
-    request.fields['email'] = email;
-    request.fields['password'] = password;
-
+    final request = http.MultipartRequest('POST', uri)
+      ..fields['email'] = email
+      ..fields['password'] = password;
+    if (bearerToken != null) {
+      request.headers['Authorization'] = 'Bearer $bearerToken';
+    }
     final response = await http.Response.fromStream(await request.send());
 
-    if (response.statusCode == 200) {
-      Map<String, dynamic> jsonResponse = jsonDecode(response.body);
-      return jsonResponse['access_token'];
+    Map<String, dynamic> jsonResponse = jsonDecode(response.body);
+
+    if (jsonResponse.containsKey('access_token')) {
+      final operationToken = jsonResponse['access_token'];
+      await setOperationToken(operationToken);
+      user = User(email: email);
+      return operationToken;
     } else {
       try {
-        final error = jsonDecode(response.body);
-        return error['message'] ?? 'Error inesperado.';
+        final error = 'false';
+        return error;
       } catch (e) {
-        return 'Error inesperado.';
+        return 'false';
       }
     }
   }
@@ -134,17 +153,19 @@ class AuthenticationBloc
 
   Future<void> setCredentialsAndToken(
       String email, String password, String token) async {
-    prefs = await SharedPreferences.getInstance();
-    await prefs.setString('email', email);
-    await prefs.setString('password', password);
-    await prefs.setString('access_token', token);
+    await storage.write(key: 'email', value: email);
+    await storage.write(key: 'password', value: password);
+    await storage.write(key: 'access_token', value: token);
+  }
+
+  Future<void> setOperationToken(String operationToken) async {
+    await storage.write(key: 'operation_token', value: operationToken);
   }
 
   Future<Map<String, String>?> getCredentialsAndToken() async {
-    prefs = await SharedPreferences.getInstance();
-    String? email = prefs.getString('email');
-    String? password = prefs.getString('password');
-    String? token = prefs.getString('access_token');
+    String? email = await storage.read(key: 'email');
+    String? password = await storage.read(key: 'password');
+    String? token = await storage.read(key: 'access_token');
     if (email != null && password != null && token != null) {
       return {'email': email, 'password': password, 'token': token};
     }
@@ -152,8 +173,12 @@ class AuthenticationBloc
   }
 
   Future<void> removeCredentials() async {
-    prefs = await SharedPreferences.getInstance();
-    prefs.remove('email');
-    prefs.remove('password');
+    await storage.delete(key: 'email');
+    await storage.delete(key: 'password');
+    await storage.delete(key: 'access_token');
+  }
+
+  Future<void> removeOperationToken() async {
+    await storage.delete(key: 'operation_token');
   }
 }

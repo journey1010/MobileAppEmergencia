@@ -45,7 +45,7 @@ dependencies:
 
   flutter:
     sdk: flutter
-
+  flutter_secure_storage:  9.0.0
   cupertino_icons: ^1.0.3
 
 dev_dependencies:
