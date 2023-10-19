@@ -47,12 +47,15 @@ class AuthenticationBloc
       );
 
       if (result != null && result is String) {
-        await setToken(result);
+        await setCredentialsAndToken(
+            event.emailAddress, event.password, result);
         user = User(email: event.emailAddress);
         emit(AuthenticationState.authenticated(user!));
       } else {
         emit(AuthenticationState.unauthenticated(
-            message: result is String ? result : 'No se pudo registrar, vuelva a intentar.'));
+            message: result is String
+                ? result
+                : 'No se pudo registrar, vuelva a intentar.'));
       }
     });
 
@@ -71,14 +74,15 @@ class AuthenticationBloc
     });
 
     on<LogoutEvent>((event, emit) async {
-      await removeToken();
+      await removeCredentials();
       user = null;
       emit(const AuthenticationState.unauthenticated());
     });
   }
 
   Future<dynamic> loginWithAPI(String email, String password) async {
-    final uri = Uri.parse('https://appemergencias.regionloreto.gob.pe/api/login');
+    final uri =
+        Uri.parse('https://appemergencias.regionloreto.gob.pe/api/login');
     final request = http.MultipartRequest('POST', uri);
     request.fields['email'] = email;
     request.fields['password'] = password;
@@ -98,8 +102,10 @@ class AuthenticationBloc
     }
   }
 
-  Future<dynamic> registerWithAPI(String name, String email, String password, String celular, String dni) async {
-    final uri = Uri.parse('https://appemergencias.regionloreto.gob.pe/api/register');
+  Future<dynamic> registerWithAPI(String name, String email, String password,
+      String celular, String dni) async {
+    final uri =
+        Uri.parse('https://appemergencias.regionloreto.gob.pe/api/register');
     final request = http.MultipartRequest('POST', uri);
     request.fields['name'] = name;
     request.fields['email'] = email;
@@ -113,7 +119,7 @@ class AuthenticationBloc
 
     if (jsonResponse.containsKey('access_token')) {
       final token = jsonResponse['access_token'];
-      await setToken(token);
+      await setCredentialsAndToken(email, password, token);
       user = User(email: email);
       return token;
     } else {
@@ -126,18 +132,28 @@ class AuthenticationBloc
     }
   }
 
-  Future<void> setToken(String token) async {
+  Future<void> setCredentialsAndToken(
+      String email, String password, String token) async {
     prefs = await SharedPreferences.getInstance();
+    await prefs.setString('email', email);
+    await prefs.setString('password', password);
     await prefs.setString('access_token', token);
   }
 
-  Future<String?> getToken() async {
+  Future<Map<String, String>?> getCredentialsAndToken() async {
     prefs = await SharedPreferences.getInstance();
-    return prefs.getString('access_token');
+    String? email = prefs.getString('email');
+    String? password = prefs.getString('password');
+    String? token = prefs.getString('access_token');
+    if (email != null && password != null && token != null) {
+      return {'email': email, 'password': password, 'token': token};
+    }
+    return null;
   }
 
-  Future<void> removeToken() async {
+  Future<void> removeCredentials() async {
     prefs = await SharedPreferences.getInstance();
-    prefs.remove('access_token');
+    prefs.remove('email');
+    prefs.remove('password');
   }
 }
