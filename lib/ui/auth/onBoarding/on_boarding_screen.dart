@@ -6,7 +6,7 @@ import 'package:app_emergen/services/helper.dart';
 import 'package:app_emergen/ui/auth/authentication_bloc.dart';
 import 'package:app_emergen/ui/auth/onBoarding/on_boarding_cubit.dart';
 import 'package:app_emergen/ui/auth/welcome/welcome_screen.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 class OnBoardingScreen extends StatefulWidget {
@@ -172,7 +172,8 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
   }
 
   Future<bool> setFinishedOnBoarding() async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    return prefs.setBool(FINISHED_ON_BOARDING, true);
+    final storage = FlutterSecureStorage();
+    await storage.write(key: FINISHED_ON_BOARDING, value: 'true');
+    return true; 
   }
 }

@@ -1,5 +1,4 @@
 import 'dart:math';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -30,6 +29,33 @@ class _HomeState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    WidgetsBinding.instance!.addPostFrameCallback((_) {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text('¡Tu Responsabilidad Salva Vidas! 🚨'),
+            content: const Column(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                Text(
+                  'Utiliza esta aplicación con prudencia y solo en situaciones de emergencia genuina. El abuso de esta herramienta afecta la capacidad de respuesta de los servicios de emergencía y pone en riesgo a quienes realmente necesitan ayuda. Juntos, podemos hacer de nuestra comunidad un lugar más seguro. #UsaConResponsabilidad 🤝.',
+                ),
+              ],
+            ),
+            actions: <Widget>[
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Text('Aceptar'),
+              ),
+            ],
+          );
+        },
+      );
+    });
+      
     return BlocListener<AuthenticationBloc, AuthenticationState>(
       listener: (context, state) {
         if (state.authState == AuthState.unauthenticated) {
@@ -43,7 +69,7 @@ class _HomeState extends State<HomeScreen> {
             children: [
               const DrawerHeader(
                 child: Text(
-                  'Drawer Header',
+                  'Perfil',
                   style: TextStyle(color: Colors.white),
                 ),
                 decoration: BoxDecoration(
@@ -113,5 +139,5 @@ class _HomeState extends State<HomeScreen> {
         ),
       ),
     );
-  }
+  } 
 }

@@ -87,8 +87,8 @@ class AuthenticationBloc
     on<LogoutEvent>((event, emit) async {
       await removeCredentials();
       await storage.delete(key: FINISHED_ON_BOARDING); 
-      user = null;
-      emit(const AuthenticationState.unauthenticated());
+      //user = null;
+      //emit(const AuthenticationState.unauthenticated());
     });
   }
 

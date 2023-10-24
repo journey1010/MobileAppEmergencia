@@ -18,7 +18,7 @@ class User {
     this.profilePictureURL = '',
     this.cellphone = '',
     this.dni = '',
-  }) : appIdentifier = 'Flutter Login Screen';
+  }) : appIdentifier = 'appEmergencia login';
 
   String fullName() => '$firstName $lastName';
 
@@ -28,7 +28,6 @@ class User {
       firstName: parsedJson['firstName'] ?? '',
       lastName: parsedJson['lastName'] ?? '',
       userID: parsedJson['id'] ?? parsedJson['userID'] ?? '',
-      profilePictureURL: parsedJson['profilePictureURL'] ?? '',
       cellphone: parsedJson['cellphone'] ?? '',
       dni: parsedJson['dni'] ?? '',
     );
@@ -40,7 +39,6 @@ class User {
       'firstName': firstName,
       'lastName': lastName,
       'id': userID,
-      'profilePictureURL': profilePictureURL,
       'appIdentifier': appIdentifier,
       'cellphone': cellphone,
       'dni': dni, 
