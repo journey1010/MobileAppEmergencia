@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:app_emergen/constants.dart';
 import 'package:app_emergen/model/user.dart';
 import 'package:app_emergen/services/helper.dart';
+import 'package:app_emergen/services/gps.dart';
 import 'package:app_emergen/ui/auth/authentication_bloc.dart';
 import 'package:app_emergen/ui/auth/welcome/welcome_screen.dart';
 import 'package:provider/provider.dart';
@@ -20,6 +21,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeState extends State<HomeScreen> {
   late User user;
+  final LocationService locationService = LocationService();
 
   @override
   void initState() {
@@ -55,7 +57,7 @@ class _HomeState extends State<HomeScreen> {
         },
       );
     });
-      
+
     return BlocListener<AuthenticationBloc, AuthenticationState>(
       listener: (context, state) {
         if (state.authState == AuthState.unauthenticated) {
@@ -68,12 +70,12 @@ class _HomeState extends State<HomeScreen> {
             padding: EdgeInsets.zero,
             children: [
               const DrawerHeader(
+                decoration: BoxDecoration(
+                  color: Color(COLOR_PRIMARY),
+                ),
                 child: Text(
                   'Perfil',
                   style: TextStyle(color: Colors.white),
-                ),
-                decoration: BoxDecoration(
-                  color: Color(COLOR_PRIMARY),
                 ),
               ),
               ListTile(
@@ -106,33 +108,43 @@ class _HomeState extends State<HomeScreen> {
             mainAxisSize: MainAxisSize.max,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              user.profilePictureURL == ''
-                  ? CircleAvatar(
-                      radius: 35,
-                      backgroundColor: Colors.grey.shade400,
-                      child: ClipOval(
-                        child: SizedBox(
-                          width: 70,
-                          height: 70,
-                          child: Image.asset(
-                            'assets/images/placeholder.jpg',
-                            fit: BoxFit.cover,
-                          ),
-                        ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    ElevatedButton.icon(
+                      onPressed: () {
+                        locationService.getLocationAndSendSOS('bomberos');
+                      },
+                      icon: Icon(Icons.local_fire_department, color: Colors.white),
+                      label: const Text('BOMBEROS'),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.red,
                       ),
-                    )
-                  : displayCircleImage(user.profilePictureURL, 80, false),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text(user.fullName()),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text(user.email),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text(user.userID),
+                    ),
+                    ElevatedButton.icon(
+                      onPressed: () {
+                        locationService.getLocationAndSendSOS('hospital');
+                      },
+                      icon: Icon(Icons.local_hospital, color: Colors.white),
+                      label: const Text('AMBULANCIA'),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.green,
+                      ),
+                    ),
+                    ElevatedButton.icon(
+                      onPressed: () {
+                        locationService.getLocationAndSendSOS('hospital');
+                      },
+                      icon: const Icon(Icons.local_police, color: Colors.white),
+                      label: const Text('POLICÍA'),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.black,
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ],
           ),
