@@ -50,7 +50,8 @@ class _HomeState extends State<HomeScreen> {
                 onPressed: () {
                   Navigator.of(context).pop();
                 },
-                child: Text('Aceptar'),
+                child: const Text(
+                  'Aceptar'),
               ),
             ],
           );
@@ -110,42 +111,50 @@ class _HomeState extends State<HomeScreen> {
             children: [
               Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                child: Column(
                   children: [
+                    SizedBox(height: 16.0), 
                     ElevatedButton.icon(
                       onPressed: () {
                         locationService.getLocationAndSendSOS('bomberos');
                       },
-                      icon: Icon(Icons.local_fire_department, color: Colors.white),
-                      label: const Text('BOMBEROS'),
+                      icon: Icon(Icons.local_fire_department, color: Colors.white, size: 48.0),
+                      label: const Text('BOMBEROS', style: TextStyle(fontSize: 20.0)),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.red,
+                        padding: EdgeInsets.all(16.0),
+                        minimumSize: Size(double.infinity, 60.0),
                       ),
                     ),
+                    SizedBox(height: 16.0),
                     ElevatedButton.icon(
                       onPressed: () {
                         locationService.getLocationAndSendSOS('hospital');
                       },
-                      icon: Icon(Icons.local_hospital, color: Colors.white),
-                      label: const Text('AMBULANCIA'),
+                      icon: Icon(Icons.local_hospital, color: Colors.white, size: 48.0),
+                      label: const Text('AMBULANCIA', style: TextStyle(fontSize: 20.0)),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.green,
+                        padding: EdgeInsets.all(16.0),
+                        minimumSize: Size(double.infinity, 60.0),
                       ),
                     ),
+                    SizedBox(height: 16.0), 
                     ElevatedButton.icon(
                       onPressed: () {
-                        locationService.getLocationAndSendSOS('hospital');
+                        locationService.getLocationAndSendSOS('policia');
                       },
-                      icon: const Icon(Icons.local_police, color: Colors.white),
-                      label: const Text('POLICÍA'),
+                      icon: const Icon(Icons.local_police, color: Colors.white, size: 48.0),
+                      label: const Text('POLICÍA', style: TextStyle(fontSize: 20.0)),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.black,
+                        padding: EdgeInsets.all(16.0),
+                        minimumSize: Size(double.infinity, 60.0),
                       ),
                     ),
                   ],
                 ),
-              ),
+              )
             ],
           ),
         ),
