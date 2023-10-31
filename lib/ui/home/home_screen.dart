@@ -31,7 +31,7 @@ class _HomeState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    WidgetsBinding.instance!.addPostFrameCallback((_) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
       showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -113,7 +113,7 @@ class _HomeState extends State<HomeScreen> {
                 padding: const EdgeInsets.all(8.0),
                 child: Column(
                   children: [
-                    SizedBox(height: 16.0), 
+                    SizedBox(height: 20.0), 
                     ElevatedButton.icon(
                       onPressed: () {
                         locationService.getLocationAndSendSOS('bomberos');
@@ -123,10 +123,10 @@ class _HomeState extends State<HomeScreen> {
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.red,
                         padding: EdgeInsets.all(16.0),
-                        minimumSize: Size(double.infinity, 60.0),
+                        minimumSize: Size(double.infinity, 80.0),
                       ),
                     ),
-                    SizedBox(height: 16.0),
+                    SizedBox(height: 20.0),
                     ElevatedButton.icon(
                       onPressed: () {
                         locationService.getLocationAndSendSOS('hospital');
@@ -136,10 +136,10 @@ class _HomeState extends State<HomeScreen> {
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.green,
                         padding: EdgeInsets.all(16.0),
-                        minimumSize: Size(double.infinity, 60.0),
+                        minimumSize: Size(double.infinity, 80.0),
                       ),
                     ),
-                    SizedBox(height: 16.0), 
+                    SizedBox(height: 20.0), 
                     ElevatedButton.icon(
                       onPressed: () {
                         locationService.getLocationAndSendSOS('policia');
@@ -149,7 +149,7 @@ class _HomeState extends State<HomeScreen> {
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.black,
                         padding: EdgeInsets.all(16.0),
-                        minimumSize: Size(double.infinity, 60.0),
+                        minimumSize: Size(double.infinity, 80.0),
                       ),
                     ),
                   ],

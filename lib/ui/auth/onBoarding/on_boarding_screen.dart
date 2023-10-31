@@ -37,11 +37,11 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
   /// list of strings containing onBoarding subtitles, the small text under the
   /// title
   final List<String> _subtitlesList = [
-    'Build your on-boarding flow in seconds.',
-    'Use Firebase for user managements.',
-    'Leverage Facebook to log in user easily.',
-    'Get more awesome templates',
-    'Get Started'
+    '',
+    '',
+    '',
+    '',
+    'Takos'
   ];
 
   /// list containing image paths or IconData representing the image of each page

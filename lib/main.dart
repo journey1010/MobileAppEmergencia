@@ -26,6 +26,9 @@ class MyApp extends StatelessWidget {
                 .copyWith(secondary: const Color(COLOR_PRIMARY))),
         debugShowCheckedModeBanner: false,
         color: const Color(COLOR_PRIMARY),
-        home: const LauncherScreen());
+        home: BlocProvider<AuthenticationBloc>(
+          create: (context) => AuthenticationBloc(),
+          child: const LauncherScreen(),
+        ));
   }
 }

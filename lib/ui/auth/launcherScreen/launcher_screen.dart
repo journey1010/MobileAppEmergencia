@@ -35,7 +35,7 @@ class _LauncherScreenState extends State<LauncherScreen> {
               pushReplacement(context, HomeScreen(user: state.user!));
               break;
             case AuthState.unauthenticated:
-              pushReplacement(context, const WelcomeScreen());
+              pushReplacement(context, WelcomeScreen());
               break;
           }
         },
