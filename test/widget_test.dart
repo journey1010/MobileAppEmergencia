@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:app_emergen/main.dart';
 
 void main() {
-  final storage  = FlutterSecureStorage
   testWidgets('Counter increments smoke test', (WidgetTester tester) async {
     await tester.pumpWidget(const MyApp());
     expect(find.text('0'), findsOneWidget);
