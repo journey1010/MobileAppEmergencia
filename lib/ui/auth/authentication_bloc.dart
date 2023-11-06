@@ -24,17 +24,18 @@ class AuthenticationBloc
         emit(const AuthenticationState.onboarding());
       } else {
         Map<String, String>? credentialsAndToken = await getCredentialsAndToken();
-        if (credentialsAndToken != null) {
-          String? token = credentialsAndToken['token'];
-          if (token == null) {
-            emit(const AuthenticationState.unauthenticated());
+        if (credentialsAndToken != null && credentialsAndToken['token'] != null) {
+          String email = credentialsAndToken['email']!;
+          String password = credentialsAndToken['password']!;
+          dynamic result = await loginWithAPI(email, password);
+          if (result != null && result is String && result != 'false') {
+            user = User(email: email); 
+            emit(AuthenticationState.authenticated(user!)); 
           } else {
-            String email = credentialsAndToken['email']!;
-            user = User(email: email);
-            emit(AuthenticationState.authenticated(user!));
+            emit(const AuthenticationState.unauthenticated()); 
           }
         } else {
-          emit(const AuthenticationState.unauthenticated());
+          emit(const AuthenticationState.unauthenticated()); 
         }
       }
     });
