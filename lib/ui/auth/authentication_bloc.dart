@@ -24,7 +24,7 @@ class AuthenticationBloc
         emit(const AuthenticationState.onboarding());
       } else {
         Map<String, String>? credentialsAndToken = await getCredentialsAndToken();
-        if (credentialsAndToken != null && credentialsAndToken['token'] != null) {
+        if (credentialsAndToken != null && credentialsAndToken['token'] != null && credentialsAndToken['email'] != null) {
           String email = credentialsAndToken['email']!;
           String password = credentialsAndToken['password']!;
           dynamic result = await loginWithAPI(email, password);
@@ -68,8 +68,7 @@ class AuthenticationBloc
     });
 
     on<LoginWithEmailAndPasswordEvent>((event, emit) async {
-      Map<String, String>? credentialsAndToken = await getCredentialsAndToken();
-      String? bearerToken = credentialsAndToken?['token'];
+      String? bearerToken = await getAccessToken();
 
       dynamic result =
           await loginWithAPI(event.email, event.password, bearerToken);
@@ -163,6 +162,15 @@ class AuthenticationBloc
     await storage.write(key: 'operation_token', value: operationToken);
   }
 
+  Future<dynamic> getAccessToken() async {
+    String? token = await storage.read(key: 'access_token');
+    if(token != null){
+      return token;
+    }else {
+      return null;
+    }
+  }
+
   Future<Map<String, String>?> getCredentialsAndToken() async {
     String? email = await storage.read(key: 'email');
     String? password = await storage.read(key: 'password');
@@ -176,7 +184,6 @@ class AuthenticationBloc
   Future<void> removeCredentials() async {
     await storage.delete(key: 'email');
     await storage.delete(key: 'password');
-    await storage.delete(key: 'access_token');
   }
 
   Future<void> removeOperationToken() async {

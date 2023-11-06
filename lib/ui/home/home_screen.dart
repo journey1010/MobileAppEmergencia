@@ -29,6 +29,20 @@ class _HomeState extends State<HomeScreen> {
     user = widget.user;
   }
 
+  void handleSOSResponse(bool success) {
+    final snackBar = SnackBar(
+      content: Text(success
+          ? 'Ubicación enviada con éxito.'
+          : 'No se pudo enviar la ubicación. Intente nuevamente.'),
+      backgroundColor: success ? Colors.green : Colors.red,
+    );
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+  }
+
+  Future<void> attemptSendSOS(String tipo) async {
+  bool success = await locationService.getLocationAndSendSOS(tipo);
+  handleSOSResponse(success);
+  }
   @override
   Widget build(BuildContext context) {
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -115,9 +129,7 @@ class _HomeState extends State<HomeScreen> {
                   children: [
                     SizedBox(height: 20.0), 
                     ElevatedButton.icon(
-                      onPressed: () {
-                        locationService.getLocationAndSendSOS('bomberos');
-                      },
+                      onPressed: () => attemptSendSOS('bomberos'),
                       icon: Icon(Icons.local_fire_department, color: Colors.white, size: 48.0),
                       label: const Text('BOMBEROS', style: TextStyle(fontSize: 20.0)),
                       style: ElevatedButton.styleFrom(
@@ -128,9 +140,7 @@ class _HomeState extends State<HomeScreen> {
                     ),
                     SizedBox(height: 20.0),
                     ElevatedButton.icon(
-                      onPressed: () {
-                        locationService.getLocationAndSendSOS('hospital');
-                      },
+                      onPressed: () => attemptSendSOS('hospital'),
                       icon: Icon(Icons.local_hospital, color: Colors.white, size: 48.0),
                       label: const Text('AMBULANCIA', style: TextStyle(fontSize: 20.0)),
                       style: ElevatedButton.styleFrom(
@@ -141,9 +151,7 @@ class _HomeState extends State<HomeScreen> {
                     ),
                     SizedBox(height: 20.0), 
                     ElevatedButton.icon(
-                      onPressed: () {
-                        locationService.getLocationAndSendSOS('policia');
-                      },
+                      onPressed: () => attemptSendSOS('policia'),
                       icon: const Icon(Icons.local_police, color: Colors.white, size: 48.0),
                       label: const Text('POLICÍA', style: TextStyle(fontSize: 20.0)),
                       style: ElevatedButton.styleFrom(
