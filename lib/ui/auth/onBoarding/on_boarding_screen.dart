@@ -27,32 +27,32 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
 
   ///list of strings containing onBoarding titles
   final List<String> _titlesList = [
-    'Flutter OnBoarding',
-    'Firebase Auth',
-    'Facebook Login',
-    'Instaflutter.com',
-    'Jump straight into the action.',
+    'Envía tu Ubicación Rápidamente',
+    'Contacta a los Bomberos',
+    'Alerta a la Policía',
+    'Llama a una Ambulancia',
+    'Asistencia Inmediata',
   ];
 
   /// list of strings containing onBoarding subtitles, the small text under the
   /// title
   final List<String> _subtitlesList = [
-    '',
-    '',
-    '',
-    '',
-    'Takos'
+    'Comparte tu ubicación exacta con solo un toque',
+    'Informa emergencias de fuego y rescate de forma eficiente',
+    'Reporta delitos o pide ayuda policial al instante',
+    'Solicita servicios médicos de emergencia cuando más lo necesitas',
+    'Estamos aquí para ayudarte en cualquier emergencia',
   ];
 
   /// list containing image paths or IconData representing the image of each page
 
-  final List<dynamic> _imageList = [
-    Icons.developer_mode,
-    Icons.layers,
-    Icons.account_circle,
-    'assets/images/ic_launcher.png',
-    Icons.code
-  ];
+final List<dynamic> _imageList = [
+  Icons.location_on, 
+  'assets/images/bomberos.png', 
+  'assets/images/policias.png', 
+  'assets/images/ambulancias.png', 
+  Icons.help_outline, 
+];
 
   @override
   Widget build(BuildContext context) {
