@@ -25,7 +25,7 @@ class AuthenticationBloc
       } else {
         Map<String, String>? credentialsAndToken = await getCredentialsAndToken();
         if (credentialsAndToken != null) {
-          String? token = credentialsAndToken['access_token'];
+          String? token = credentialsAndToken['token'];
           if (token == null) {
             emit(const AuthenticationState.unauthenticated());
           } else {
