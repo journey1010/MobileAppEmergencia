@@ -5,6 +5,10 @@ import 'package:app_emergen/ui/auth/authentication_bloc.dart';
 import 'package:app_emergen/ui/auth/launcherScreen/launcher_screen.dart';
 import 'package:app_emergen/ui/loading_cubit.dart';
 
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:app_emergen/localization/strings_en.dart';
+import 'package:app_emergen/localization/strings_es.dart';
+
 void main() => runApp(MultiBlocProvider(
       providers: [
         BlocProvider(create: (_) => AuthenticationBloc()),
@@ -29,6 +33,17 @@ class MyApp extends StatelessWidget {
         home: BlocProvider<AuthenticationBloc>(
           create: (context) => AuthenticationBloc(),
           child: const LauncherScreen(),
-        ));
+        ),
+        localizationsDelegates: [
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
+          // Agrega tus propios delegates de localización aquí
+        ],
+        supportedLocales: [
+          const Locale('en', ''), // Inglés
+          const Locale('es', ''), // Español
+        ],
+      );
   }
 }

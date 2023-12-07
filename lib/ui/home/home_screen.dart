@@ -1,4 +1,6 @@
 import 'dart:math';
+import 'package:app_emergen/localization/localized_strings.dart';
+import 'package:app_emergen/ui/chat/chat_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -9,6 +11,7 @@ import 'package:app_emergen/services/gps.dart';
 import 'package:app_emergen/ui/auth/authentication_bloc.dart';
 import 'package:app_emergen/ui/auth/welcome/welcome_screen.dart';
 import 'package:provider/provider.dart';
+
 
 class HomeScreen extends StatefulWidget {
   final User user;
@@ -32,8 +35,8 @@ class _HomeState extends State<HomeScreen> {
   void handleSOSResponse(bool success) {
     final snackBar = SnackBar(
       content: Text(success
-          ? 'Ubicación enviada con éxito.'
-          : 'No se pudo enviar la ubicación. Intente nuevamente.'),
+        ? LocalizedStrings.of(context).sendLocationOk  // Usa la cadena localizada para el caso de éxito
+        : LocalizedStrings.of(context).sendLocationFailed),
       backgroundColor: success ? Colors.green : Colors.red,
     );
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
@@ -50,13 +53,11 @@ class _HomeState extends State<HomeScreen> {
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: const Text('¡Tu Responsabilidad Salva Vidas! 🚨'),
-            content: const Column(
+            title: Text(LocalizedStrings.of(context).alertTitle),
+            content: Column(
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
-                Text(
-                  'Utiliza esta aplicación con prudencia y solo en situaciones de emergencia genuina. El abuso de esta herramienta afecta la capacidad de respuesta de los servicios de emergencía y pone en riesgo a quienes realmente necesitan ayuda. Juntos, podemos hacer de nuestra comunidad un lugar más seguro. #UsaConResponsabilidad 🤝.',
-                ),
+                Text(LocalizedStrings.of(context).alertBodyText),
               ],
             ),
             actions: <Widget>[
@@ -64,8 +65,7 @@ class _HomeState extends State<HomeScreen> {
                 onPressed: () {
                   Navigator.of(context).pop();
                 },
-                child: const Text(
-                  'Aceptar'),
+                child: Text(LocalizedStrings.of(context).alertButtonText),
               ),
             ],
           );
@@ -84,18 +84,18 @@ class _HomeState extends State<HomeScreen> {
           child: ListView(
             padding: EdgeInsets.zero,
             children: [
-              const DrawerHeader(
+              DrawerHeader(
                 decoration: BoxDecoration(
                   color: Color(COLOR_PRIMARY),
                 ),
                 child: Text(
-                  'Perfil',
+                  LocalizedStrings.of(context).sideBarItemUser,
                   style: TextStyle(color: Colors.white),
                 ),
               ),
               ListTile(
-                title: const Text(
-                  'Salir',
+                title: Text(
+                  LocalizedStrings.of(context).sideBarItemLogout,
                   style: TextStyle(color: Colors.black),
                 ),
                 leading: Transform.rotate(
@@ -109,8 +109,8 @@ class _HomeState extends State<HomeScreen> {
           ),
         ),
         appBar: AppBar(
-          title: const Text(
-            'Inicio',
+          title: Text(
+            LocalizedStrings.of(context).appBarHomeScreen,
             style: TextStyle(color: Colors.black),
           ),
           iconTheme: const IconThemeData(color: Colors.black),
@@ -131,7 +131,7 @@ class _HomeState extends State<HomeScreen> {
                     ElevatedButton.icon(
                       onPressed: () => attemptSendSOS('bomberos'),
                       icon: Icon(Icons.local_fire_department, color: Colors.white, size: 48.0),
-                      label: const Text('BOMBEROS', style: TextStyle(fontSize: 20.0)),
+                      label: Text( LocalizedStrings.of(context).buttonFireMan, style: TextStyle(fontSize: 20.0)),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.red,
                         padding: EdgeInsets.all(16.0),
@@ -142,7 +142,7 @@ class _HomeState extends State<HomeScreen> {
                     ElevatedButton.icon(
                       onPressed: () => attemptSendSOS('hospital'),
                       icon: Icon(Icons.local_hospital, color: Colors.white, size: 48.0),
-                      label: const Text('AMBULANCIA', style: TextStyle(fontSize: 20.0)),
+                      label: Text( LocalizedStrings.of(context).buttonAmbulance, style: TextStyle(fontSize: 20.0)),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.green,
                         padding: EdgeInsets.all(16.0),
@@ -153,7 +153,7 @@ class _HomeState extends State<HomeScreen> {
                     ElevatedButton.icon(
                       onPressed: () => attemptSendSOS('policia'),
                       icon: const Icon(Icons.local_police, color: Colors.white, size: 48.0),
-                      label: const Text('POLICÍA', style: TextStyle(fontSize: 20.0)),
+                      label: Text( LocalizedStrings.of(context).buttonPolice, style: TextStyle(fontSize: 20.0)),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.black,
                         padding: EdgeInsets.all(16.0),
@@ -165,6 +165,15 @@ class _HomeState extends State<HomeScreen> {
               )
             ],
           ),
+        ),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {
+            Navigator.of(context).push(
+              MaterialPageRoute(builder: (context) => ChatScreen()),
+            );
+          },
+          child: Icon( Icons.chat ),
+          backgroundColor: Colors.blue,
         ),
       ),
     );

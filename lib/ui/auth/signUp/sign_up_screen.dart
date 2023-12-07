@@ -1,3 +1,4 @@
+import 'package:app_emergen/localization/localized_strings.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -42,8 +43,7 @@ class _SignUpState extends State<SignUpScreen> {
                   } else {
                     showSnackBar(
                         context,
-                        state.message ??
-                            'No se pudo unir, Intente otra vez.');
+                        state.message ?? LocalizedStrings.of(context).registerFailed );
                   }
                 },
               ),
@@ -51,7 +51,7 @@ class _SignUpState extends State<SignUpScreen> {
                 listener: (context, state) {
                   if (state is ValidFields) {
                     context.read<LoadingCubit>().showLoading(
-                        context, 'Creando nueva cuenta, por favor espere.', false);
+                        context, LocalizedStrings.of(context).registerAwait , false);
                     context.read<AuthenticationBloc>().add(
                         SignupWithEmailAndPasswordEvent(
                             emailAddress: email!,
@@ -89,8 +89,8 @@ class _SignUpState extends State<SignUpScreen> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
-                          const Text(
-                            'Crear una cuenta nueva',
+                           Text(
+                            LocalizedStrings.of(context).registerTitle,
                             style: TextStyle(
                                 color: Color(COLOR_PRIMARY),
                                 fontWeight: FontWeight.bold,
@@ -107,7 +107,7 @@ class _SignUpState extends State<SignUpScreen> {
                               },
                               textInputAction: TextInputAction.next,
                               decoration: getInputDecoration(
-                                  hint: 'Nombres',
+                                  hint: LocalizedStrings.of(context).registerName,
                                   darkMode: isDarkMode(context),
                                   errorColor: Theme.of(context).colorScheme.error),
                             ),
@@ -123,7 +123,7 @@ class _SignUpState extends State<SignUpScreen> {
                               },
                               textInputAction: TextInputAction.next,
                               decoration: getInputDecoration(
-                                  hint: 'Apellidos',
+                                  hint: LocalizedStrings.of(context).registerLastname,
                                   darkMode: isDarkMode(context),
                                   errorColor: Theme.of(context).colorScheme.error),
                             ),
@@ -139,7 +139,7 @@ class _SignUpState extends State<SignUpScreen> {
                                 email = val;
                               },
                               decoration: getInputDecoration(
-                                  hint: 'Correo Electrónico',
+                                  hint: LocalizedStrings.of(context).registerEmail,
                                   darkMode: isDarkMode(context),
                                   errorColor: Theme.of(context).colorScheme.error),
                             ),
@@ -152,7 +152,7 @@ class _SignUpState extends State<SignUpScreen> {
                               textInputAction: TextInputAction.next,
                               validator: (val) {
                                 if (val == null || val.isEmpty) {
-                                  return 'Por favor ingrese su DNI';
+                                  return LocalizedStrings.of(context).registerDniError;
                                 }
                                 return null;
                               },
@@ -160,7 +160,7 @@ class _SignUpState extends State<SignUpScreen> {
                                 dni = val;
                               },
                               decoration: getInputDecoration(
-                                  hint: 'DNI',
+                                  hint: LocalizedStrings.of(context).registerDni,
                                   darkMode: isDarkMode(context),
                                   errorColor: Theme.of(context).colorScheme.error),
                             ),
@@ -174,7 +174,7 @@ class _SignUpState extends State<SignUpScreen> {
                               textInputAction: TextInputAction.next,
                               validator: (val) {
                                 if (val == null || val.isEmpty) {
-                                  return 'Por favor ingrese su número de celular';
+                                  return LocalizedStrings.of(context).registerPhoneNumberError;
                                 }
                                 return null;
                               },
@@ -182,7 +182,7 @@ class _SignUpState extends State<SignUpScreen> {
                                 cellphone = val;
                               },
                               decoration: getInputDecoration(
-                                  hint: 'Número de celular',
+                                  hint: LocalizedStrings.of(context).registerPhoneNumber,
                                   darkMode: isDarkMode(context),
                                   errorColor: Theme.of(context).colorScheme.error),
                             ),
@@ -203,7 +203,7 @@ class _SignUpState extends State<SignUpScreen> {
                                   const TextStyle(height: 0.8, fontSize: 18.0),
                               cursorColor: const Color(COLOR_PRIMARY),
                               decoration: getInputDecoration(
-                                  hint: 'Contraseña',
+                                  hint: LocalizedStrings.of(context).registerPasswd,
                                   darkMode: isDarkMode(context),
                                   errorColor: Theme.of(context).colorScheme.error),
                             ),
@@ -228,7 +228,7 @@ class _SignUpState extends State<SignUpScreen> {
                                   const TextStyle(height: 0.8, fontSize: 18.0),
                               cursorColor: const Color(COLOR_PRIMARY),
                               decoration: getInputDecoration(
-                                  hint: 'Confirmar contraseña',
+                                  hint: LocalizedStrings.of(context).registerConfirmPasswd,
                                   darkMode: isDarkMode(context),
                                   errorColor: Theme.of(context).colorScheme.error),
                             ),
@@ -248,8 +248,8 @@ class _SignUpState extends State<SignUpScreen> {
                                   ),
                                 ),
                               ),
-                              child: const Text(
-                                'Únete',
+                              child: Text(
+                                LocalizedStrings.of(context).registerButton,
                                 style: TextStyle(
                                   fontSize: 20,
                                   fontWeight: FontWeight.bold,
@@ -287,16 +287,16 @@ class _SignUpState extends State<SignUpScreen> {
                               textAlign: TextAlign.left,
                               text: TextSpan(
                                 children: [
-                                  const TextSpan(
+                                  TextSpan(
                                     text:
-                                        'Al crear una cuenta aceptas nuestros terminos de uso.',
+                                      LocalizedStrings.of(context).registerTerms,
                                     style: TextStyle(color: Colors.grey),
                                   ),
                                   TextSpan(
-                                    style: const TextStyle(
+                                    style: TextStyle(
                                       color: Colors.blueAccent,
                                     ),
-                                    text: 'Terminos de uso.',
+                                    text: LocalizedStrings.of(context).registerTerms2,
                                     recognizer: TapGestureRecognizer()
                                       ..onTap = () async {
                                         if (await canLaunch(EULA)) {

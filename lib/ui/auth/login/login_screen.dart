@@ -1,3 +1,4 @@
+import 'package:app_emergen/localization/localized_strings.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -47,7 +48,7 @@ class _LoginScreen extends State<LoginScreen> {
                         context, HomeScreen(user: state.user!), false);
                   } else {
                     ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text(state.message ?? 'No puedo conectarse, Intente otra vez.')),
+                      SnackBar(content: Text(state.message ?? LocalizedStrings.of(context).loginFailed)),
                     );
                   }
                 },
@@ -56,7 +57,7 @@ class _LoginScreen extends State<LoginScreen> {
                 listener: (context, state) {
                   if (state is ValidLoginFields) {
                     context.read<LoadingCubit>().showLoading(
-                        context, 'Iniciando, Por favor espere...', false);
+                        context, LocalizedStrings.of(context).loginAwait, false);
                     context.read<AuthenticationBloc>().add(
                           LoginWithEmailAndPasswordEvent(
                             email: email!,
@@ -79,11 +80,11 @@ class _LoginScreen extends State<LoginScreen> {
                   autovalidateMode: _validate,
                   child: ListView(
                     children: [
-                      const Padding(
+                      Padding(
                         padding: EdgeInsets.only(
                             top: 32.0, right: 16.0, left: 16.0),
                         child: Text(
-                          'Complete los campos',
+                          LocalizedStrings.of(context).loginTitle,
                           style: TextStyle(
                               color: Color(COLOR_PRIMARY),
                               fontSize: 25.0,
@@ -104,7 +105,7 @@ class _LoginScreen extends State<LoginScreen> {
                             keyboardType: TextInputType.emailAddress,
                             cursorColor: const Color(COLOR_PRIMARY),
                             decoration: getInputDecoration(
-                                hint: 'Correo electrónico',
+                                hint: LocalizedStrings.of(context).loginEmail,
                                 darkMode: isDarkMode(context),
                                 errorColor: Theme.of(context).colorScheme.error)),
                       ),
@@ -125,7 +126,7 @@ class _LoginScreen extends State<LoginScreen> {
                             style: const TextStyle(fontSize: 18.0),
                             cursorColor: const Color(COLOR_PRIMARY),
                             decoration: getInputDecoration(
-                                hint: 'Contraseña',
+                                hint: LocalizedStrings.of(context).loginPasswd,
                                 darkMode: isDarkMode(context),
                                 errorColor: Theme.of(context).colorScheme.error)),
                       ),

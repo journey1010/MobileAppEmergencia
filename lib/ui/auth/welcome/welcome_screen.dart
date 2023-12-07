@@ -1,3 +1,4 @@
+import 'package:app_emergen/localization/localized_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:app_emergen/constants.dart';
@@ -41,11 +42,11 @@ class WelcomeScreen extends StatelessWidget {
                       fit: BoxFit.cover,
                     ),
                   ),
-                  const Padding(
+                  Padding(
                     padding: EdgeInsets.only(
                         left: 16, top: 32, right: 16, bottom: 8),
                     child: Text(
-                      'Bienvenido ciudadano!',
+                      LocalizedStrings.of(context).welcomeTitle,
                       textAlign: TextAlign.center,
                       style: TextStyle(
                           color: Color(COLOR_PRIMARY),
@@ -53,10 +54,10 @@ class WelcomeScreen extends StatelessWidget {
                           fontWeight: FontWeight.bold),
                     ),
                   ),
-                  const Padding(
+                  Padding(
                     padding: EdgeInsets.symmetric(horizontal: 40, vertical: 16),
                     child: Text(
-                      'AppEmergencia te permite compartir tu localización y alertar a los servicios de emergencia, como bomberos, policías o ambulancias.',
+                    LocalizedStrings.of(context).welcomeBodyText,
                       style: TextStyle(fontSize: 18),
                       textAlign: TextAlign.center,
                     ),
@@ -74,8 +75,8 @@ class WelcomeScreen extends StatelessWidget {
                             side:
                                 const BorderSide(color: Color(COLOR_PRIMARY))),
                       ),
-                      child: const Text(
-                        'Iniciar sesión',
+                      child: Text(
+                        LocalizedStrings.of(context).welcomeLogin,
                         style: TextStyle(
                             fontSize: 20, fontWeight: FontWeight.bold),
                       ),
@@ -85,11 +86,11 @@ class WelcomeScreen extends StatelessWidget {
                     ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.only(
+                    padding: EdgeInsets.only(
                         right: 40.0, left: 40.0, top: 20, bottom: 20),
                     child: TextButton(
-                      child: const Text(
-                        'Únete',
+                      child: Text(
+                        LocalizedStrings.of(context).welcomeJoinUs,
                         style: TextStyle(
                             fontSize: 20,
                             fontWeight: FontWeight.bold,

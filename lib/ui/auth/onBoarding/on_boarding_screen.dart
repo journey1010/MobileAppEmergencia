@@ -1,3 +1,4 @@
+import 'package:app_emergen/localization/localized_strings.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -25,24 +26,24 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
     super.dispose();
   }
 
-  ///list of strings containing onBoarding titles
-  final List<String> _titlesList = [
-    'Envía tu Ubicación Rápidamente',
-    'Contacta a los Bomberos',
-    'Alerta a la Policía',
-    'Llama a una Ambulancia',
-    'Asistencia Inmediata',
-  ];
+  // /list of strings containing onBoarding titles
+  // final List<String> _titlesList = [
+  //   'Envía tu Ubicación Rápidamente',
+  //   'Contacta a los Bomberos',
+  //   'Alerta a la Policía',
+  //   'Llama a una Ambulancia',
+  //   'Asistencia Inmediata',
+  // ];
 
-  /// list of strings containing onBoarding subtitles, the small text under the
-  /// title
-  final List<String> _subtitlesList = [
-    'Comparte tu ubicación exacta con solo un toque',
-    'Informa emergencias de fuego y rescate de forma eficiente',
-    'Reporta delitos o pide ayuda policial al instante',
-    'Solicita servicios médicos de emergencia cuando más lo necesitas',
-    'Estamos aquí para ayudarte en cualquier emergencia',
-  ];
+  // / list of strings containing onBoarding subtitles, the small text under the
+  // / title
+  // final List<String> _subtitlesList = [
+  //   'Comparte tu ubicación exacta con solo un toque',
+  //   'Informa emergencias de fuego y rescate de forma eficiente',
+  //   'Reporta delitos o pide ayuda policial al instante',
+  //   'Solicita servicios médicos de emergencia cuando más lo necesitas',
+  //   'Estamos aquí para ayudarte en cualquier emergencia',
+  // ];
 
   /// list containing image paths or IconData representing the image of each page
 
@@ -65,16 +66,15 @@ final List<dynamic> _imageList = [
             return Stack(
               children: [
                 PageView.builder(
-                  itemBuilder: (context, index) => getPage(_imageList[index],
-                      _titlesList[index], _subtitlesList[index], context),
+                  itemBuilder: (context, index) => getPage(_imageList[index], index, context),
                   controller: pageController,
-                  itemCount: _titlesList.length,
+                  itemCount: LocalizedStrings.of(context).titles.length,
                   onPageChanged: (int index) {
                     context.read<OnBoardingCubit>().onPageChanged(index);
                   },
                 ),
                 Visibility(
-                  visible: state.currentPageCount + 1 == _titlesList.length,
+                  visible: state.currentPageCount + 1 == LocalizedStrings.of(context).titles.length,
                   child: Padding(
                     padding: const EdgeInsets.all(16.0),
                     child: Align(
@@ -116,7 +116,7 @@ final List<dynamic> _imageList = [
                     alignment: Alignment.bottomCenter,
                     child: SmoothPageIndicator(
                       controller: pageController,
-                      count: _titlesList.length,
+                      count: LocalizedStrings.of(context).titles.length,
                       effect: ScrollingDotsEffect(
                           activeDotColor: Colors.white,
                           dotColor: Colors.grey.shade400,
@@ -134,8 +134,10 @@ final List<dynamic> _imageList = [
     );
   }
 
-  Widget getPage(
-      dynamic image, String title, String subTitle, BuildContext context) {
+  Widget getPage( dynamic image, int index, BuildContext context ) {
+    String title = LocalizedStrings.of(context).titles[index];
+    String subTitle = LocalizedStrings.of(context).subtitles[index];
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       mainAxisAlignment: MainAxisAlignment.center,
