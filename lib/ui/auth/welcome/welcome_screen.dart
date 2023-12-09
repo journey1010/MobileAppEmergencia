@@ -63,17 +63,17 @@ class WelcomeScreen extends StatelessWidget {
                     ),
                   ),
                   Padding(
-                    padding:
-                        const EdgeInsets.only(right: 40.0, left: 40.0, top: 40),
+                    padding: const EdgeInsets.only(right: 40.0, left: 40.0, top: 20),
                     child: ElevatedButton(
                       style: ElevatedButton.styleFrom(
                         backgroundColor: const Color(COLOR_PRIMARY),
                         textStyle: const TextStyle(color: Colors.white),
-                        padding: const EdgeInsets.only(top: 12, bottom: 12),
+                        padding: const EdgeInsets.only(top: 20, bottom: 20),
                         shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(25.0),
-                            side:
-                                const BorderSide(color: Color(COLOR_PRIMARY))),
+                          borderRadius: BorderRadius.circular(8.0),
+                          side:
+                            const BorderSide(color: Color(COLOR_PRIMARY))
+                        ),
                       ),
                       child: Text(
                         LocalizedStrings.of(context).welcomeLogin,
@@ -86,8 +86,32 @@ class WelcomeScreen extends StatelessWidget {
                     ),
                   ),
                   Padding(
-                    padding: EdgeInsets.only(
-                        right: 40.0, left: 40.0, top: 20, bottom: 20),
+                    padding: const EdgeInsets.only(right: 40.0, left: 40.0, top: 10),
+                    child: Row(
+                      children: <Widget>[
+                        Expanded(
+                          child: Divider(color: Colors.grey.shade600),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 10),
+                          child: Text(
+                            LocalizedStrings.of(context).textOr,
+                            style: TextStyle(
+                              fontSize: 15,
+                              fontWeight: FontWeight.w400,
+                              color: Colors.grey.shade600,
+                            ),
+                          ),
+                        ),
+                        Expanded(
+                          child: Divider(color: Colors.grey.shade600),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(
+                        right: 40.0, left: 40.0, top: 10, bottom: 10),
                     child: TextButton(
                       child: Text(
                         LocalizedStrings.of(context).welcomeJoinUs,
@@ -101,11 +125,11 @@ class WelcomeScreen extends StatelessWidget {
                       },
                       style: ButtonStyle(
                         padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
-                          const EdgeInsets.only(top: 12, bottom: 12),
+                          const EdgeInsets.only(top: 16, bottom: 16),
                         ),
                         shape: MaterialStateProperty.all<OutlinedBorder>(
                           RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(25.0),
+                            borderRadius: BorderRadius.circular(8.0),
                             side: const BorderSide(
                               color: Color(COLOR_PRIMARY),
                             ),

@@ -5,6 +5,10 @@ class StringsEn {
   String get sendLocationFailed => "Could not send the location. Please try again.";
   String get alertTitle => "Your Responsibility Saves Lives! 🚨";
   String get alertBodyText => "Use this app wisely and only in genuine emergency situations. Misuse of this tool affects the responsiveness of emergency services and puts at risk those who really need help. Together, we can make our community a safer place. #UseResponsibly 🤝.";
+  String get ourServices => "Emergency Services";
+  String get lastNotf => "Last Notification";
+  String get lastNotfBodyText => "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout, eso tilin, waos tilin";
+  String get lastNotfSeeMoreButton => "See More";
   String get alertButtonText => "Accept";
 
   String get sideBarItemUser => "Profile";
@@ -14,6 +18,12 @@ class StringsEn {
   String get buttonFireMan => "FIREFIGHTERS";
   String get buttonAmbulance => "AMBULANCE";
   String get buttonPolice => "POLICE";
+  String get carouselCaption1 => "Police Officers";
+  String get carouselCaption2 => "Emergencies";
+  String get carouselCaption3 => "Firefighters";
+  String get carouselSubtitles1 => "Dedicated to Protect and Serve at a Moment's Notice.";
+  String get carouselSubtitles2 => "Always Ready to Respond to Your Urgent Calls.";
+  String get carouselSubtitles3 => "Combating Fires and Saving Lives.";
 
   // OnBoarding
   List<String> get titles => [
@@ -32,18 +42,30 @@ class StringsEn {
     'We are here to help you in any emergency',
   ];
 
+  //Welcome
+  String get welcomeTitle => "Welcome citizen!";
+  String get welcomeBodyText => "AppEmergency allows you to share your location and alert emergency services, such as firefighters, police, or ambulances.";
+  String get welcomeLogin => "Log In";
+  String get textOr => "OR";
+  String get welcomeJoinUs => "Join Us";
+
   // Login
   String get loginFailed => "Cannot connect, Please try again.";
   String get loginAwait => "Starting, Please wait...";
-  String get loginTitle => "Complete the fields";
+  String get loginTitle => "Hello Again!";
+  String get loginSubtitle => "It's always a pleasure to help you again.";
   String get loginEmail => "Email";
   String get loginPasswd => "Password";
+  String get loginForgotPw => "Forgot password?";
   String get loginButton => "Log In";
+  String get loginToSignUp => "Don't have an account? Sign up";
+
 
   // Register
   String get registerFailed => "Could not join, Please try again.";
   String get registerAwait => "Creating new account, please wait.";
-  String get registerTitle => "Create a new account";
+  String get registerTitle => "Get On Board!";
+  String get registerSubtitle => "We help you to get safe.";
   String get registerName => "Name";
   String get registerLastname => "last name";
   String get registerEmail => "Email";
@@ -61,9 +83,8 @@ class StringsEn {
   String get registerTerms2 => "Terms of Use.";
   String get registerButton => "Join";
 
-  //Welcome
-  String get welcomeTitle => "Welcome citizen!";
-  String get welcomeBodyText => "AppEmergency allows you to share your location and alert emergency services, such as firefighters, police, or ambulances.";
-  String get welcomeLogin => "Log In";
-  String get welcomeJoinUs => "Join Us";
+  // Chat
+  String get chatPlaceholder => "No messages yet.";
+  String get chatInputHint => "Write a message...";
+
 }

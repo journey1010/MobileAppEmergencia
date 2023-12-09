@@ -1,3 +1,4 @@
+import 'package:app_emergen/localization/localized_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_chat_ui/flutter_chat_ui.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
@@ -15,12 +16,15 @@ class _ChatScreenState extends State<ChatScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Chat")), // Optional: Added for better UI
+      appBar: AppBar(title: Text("Chat"), backgroundColor: Colors.white,), // Optional: Added for better UI
       body: Chat(
         messages: _messages,
         onSendPressed: _handleSendPressed,
         user: _user,
-        // Optional: You can add additional properties as per your requirement
+        l10n: ChatL10nEn(
+          inputPlaceholder: LocalizedStrings.of(context).chatInputHint,
+          emptyChatPlaceholder: LocalizedStrings.of(context).chatPlaceholder,
+        ),
       ),
     );
   }

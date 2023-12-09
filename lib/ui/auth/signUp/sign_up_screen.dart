@@ -74,8 +74,6 @@ class _SignUpState extends State<SignUpScreen> {
                     color: isDarkMode(context) ? Colors.white : Colors.black),
               ),
               body: SingleChildScrollView(
-                padding:
-                    const EdgeInsets.only(left: 16.0, right: 16, bottom: 16),
                 child: BlocBuilder<SignUpBloc, SignUpState>(
                   buildWhen: (old, current) =>
                       current is SignUpFailureState && old != current,
@@ -89,16 +87,35 @@ class _SignUpState extends State<SignUpScreen> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
-                           Text(
-                            LocalizedStrings.of(context).registerTitle,
-                            style: TextStyle(
-                                color: Color(COLOR_PRIMARY),
-                                fontWeight: FontWeight.bold,
-                                fontSize: 25.0),
+                          Align(
+                            alignment: Alignment.centerLeft,
+                            child: Image.asset(
+                              'assets/images/signup_image.png',
+                              width: 250.0,
+                              height: 250.0,
+                              fit: BoxFit.cover,
+                            ),
                           ),
                           Padding(
-                            padding: const EdgeInsets.only(
-                                top: 16.0, right: 8.0, left: 8.0),
+                            padding: EdgeInsets.only(right: 16.0, left: 16.0),
+                            child: Text(
+                              LocalizedStrings.of(context).registerTitle,
+                              style: TextStyle(
+                                color: Color(COLOR_PRIMARY),
+                                fontSize: 24,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                          Padding(
+                            padding: EdgeInsets.only(right: 16.0, left: 16.0),
+                            child: Text(
+                              LocalizedStrings.of(context).registerSubtitle,
+                              style: TextStyle( color: Colors.grey.shade700, fontSize: 16 ),
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only( top: 10, right: 16, left: 16 ),
                             child: TextFormField(
                               textCapitalization: TextCapitalization.words,
                               validator: validateName,
@@ -107,14 +124,16 @@ class _SignUpState extends State<SignUpScreen> {
                               },
                               textInputAction: TextInputAction.next,
                               decoration: getInputDecoration(
-                                  hint: LocalizedStrings.of(context).registerName,
-                                  darkMode: isDarkMode(context),
-                                  errorColor: Theme.of(context).colorScheme.error),
+                                hint: LocalizedStrings.of(context).registerName,
+                                darkMode: isDarkMode(context),
+                                icon: Icons.person,
+                                errorColor: Theme.of(context).colorScheme.error
+                              ),
                             ),
                           ),
                           Padding(
                             padding: const EdgeInsets.only(
-                                top: 16.0, right: 8.0, left: 8.0),
+                                top: 16.0, right: 16, left: 16),
                             child: TextFormField(
                               textCapitalization: TextCapitalization.words,
                               validator: validateName,
@@ -125,12 +144,13 @@ class _SignUpState extends State<SignUpScreen> {
                               decoration: getInputDecoration(
                                   hint: LocalizedStrings.of(context).registerLastname,
                                   darkMode: isDarkMode(context),
+                                  icon: Icons.swipe_left_alt_rounded,
                                   errorColor: Theme.of(context).colorScheme.error),
                             ),
                           ),
                           Padding(
                             padding: const EdgeInsets.only(
-                                top: 16.0, right: 8.0, left: 8.0),
+                                top: 16.0, right: 16, left: 16),
                             child: TextFormField(
                               keyboardType: TextInputType.emailAddress,
                               textInputAction: TextInputAction.next,
@@ -141,12 +161,13 @@ class _SignUpState extends State<SignUpScreen> {
                               decoration: getInputDecoration(
                                   hint: LocalizedStrings.of(context).registerEmail,
                                   darkMode: isDarkMode(context),
+                                  icon: Icons.email,
                                   errorColor: Theme.of(context).colorScheme.error),
                             ),
                           ),
                           Padding(
                             padding: const EdgeInsets.only(
-                                top: 16.0, right: 8.0, left: 8.0),
+                                top: 16.0, right: 16, left: 16),
                             child: TextFormField(
                               keyboardType: TextInputType.text, 
                               textInputAction: TextInputAction.next,
@@ -162,13 +183,14 @@ class _SignUpState extends State<SignUpScreen> {
                               decoration: getInputDecoration(
                                   hint: LocalizedStrings.of(context).registerDni,
                                   darkMode: isDarkMode(context),
+                                  icon: Icons.lock,
                                   errorColor: Theme.of(context).colorScheme.error),
                             ),
                           ),
 
                           Padding(
                             padding: const EdgeInsets.only(
-                                top: 16.0, right: 8.0, left: 8.0),
+                                top: 16.0, right: 16, left: 16),
                             child: TextFormField(
                               keyboardType: TextInputType.text, // Cambia el tipo según sea necesario
                               textInputAction: TextInputAction.next,
@@ -184,13 +206,14 @@ class _SignUpState extends State<SignUpScreen> {
                               decoration: getInputDecoration(
                                   hint: LocalizedStrings.of(context).registerPhoneNumber,
                                   darkMode: isDarkMode(context),
+                                  icon: Icons.phone,
                                   errorColor: Theme.of(context).colorScheme.error),
                             ),
                           ),
 
                           Padding(
                             padding: const EdgeInsets.only(
-                                top: 16.0, right: 8.0, left: 8.0),
+                                top: 16.0, right: 16, left: 16),
                             child: TextFormField(
                               obscureText: true,
                               textInputAction: TextInputAction.next,
@@ -205,12 +228,13 @@ class _SignUpState extends State<SignUpScreen> {
                               decoration: getInputDecoration(
                                   hint: LocalizedStrings.of(context).registerPasswd,
                                   darkMode: isDarkMode(context),
+                                  icon: Icons.password,
                                   errorColor: Theme.of(context).colorScheme.error),
                             ),
                           ),
                           Padding(
                             padding: const EdgeInsets.only(
-                                top: 16.0, right: 8.0, left: 8.0),
+                                top: 16.0, right: 16, left: 16),
                             child: TextFormField(
                               textInputAction: TextInputAction.done,
                               onFieldSubmitted: (_) =>
@@ -224,25 +248,25 @@ class _SignUpState extends State<SignUpScreen> {
                               onSaved: (String? val) {
                                 confirmPassword = val;
                               },
-                              style:
-                                  const TextStyle(height: 0.8, fontSize: 18.0),
+                              style: const TextStyle(height: 0.8, fontSize: 18.0),
                               cursorColor: const Color(COLOR_PRIMARY),
                               decoration: getInputDecoration(
                                   hint: LocalizedStrings.of(context).registerConfirmPasswd,
                                   darkMode: isDarkMode(context),
+                                  icon: Icons.password_rounded,
                                   errorColor: Theme.of(context).colorScheme.error),
                             ),
                           ),
                           Padding(
                             padding: const EdgeInsets.only(
-                                right: 40.0, left: 40.0, top: 40.0),
+                                right: 16, left: 16, top: 20),
                             child: ElevatedButton(
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: const Color(COLOR_PRIMARY),
                                 padding:
-                                    const EdgeInsets.only(top: 12, bottom: 12),
+                                    const EdgeInsets.only(top: 18, bottom: 18),
                                 shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(25.0),
+                                  borderRadius: BorderRadius.circular( 8.0 ),
                                   side: const BorderSide(
                                     color: Color(COLOR_PRIMARY),
                                   ),

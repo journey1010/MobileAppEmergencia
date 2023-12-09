@@ -187,26 +187,44 @@ bool isDarkMode(BuildContext context) {
   }
 }
 
-InputDecoration getInputDecoration(
-    {required String hint, required bool darkMode, required Color errorColor}) {
+InputDecoration getInputDecoration({
+  required String hint,
+  required bool darkMode,
+  required Color errorColor,
+  IconData? icon, // Opcional, añade esto si quieres un ícono
+}) {
   return InputDecoration(
-    contentPadding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+    filled: true,
+    contentPadding: const EdgeInsets.symmetric(vertical: 20, horizontal: 16),
     fillColor: darkMode ? Colors.black54 : Colors.white,
     hintText: hint,
+    hintStyle: TextStyle(
+      color: darkMode ? Colors.white60 : Colors.grey.shade800,
+    ),
+    prefixIcon: icon != null ? Icon(icon, color: darkMode ? Colors.white60 : Colors.grey) : null,
+    border: OutlineInputBorder(
+      borderRadius: BorderRadius.circular(8.0), // Ajustado para bordes menos redondeados
+      borderSide: BorderSide.none,
+    ),
     focusedBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(25.0),
-        borderSide: const BorderSide(color: Color(COLOR_PRIMARY), width: 2.0)),
+      borderRadius: BorderRadius.circular(8.0),
+      borderSide: BorderSide(color: Color(COLOR_PRIMARY), width: 2.0),
+    ),
     errorBorder: OutlineInputBorder(
+      borderRadius: BorderRadius.circular(8.0),
       borderSide: BorderSide(color: errorColor),
-      borderRadius: BorderRadius.circular(25.0),
     ),
     focusedErrorBorder: OutlineInputBorder(
-      borderSide: BorderSide(color: errorColor),
-      borderRadius: BorderRadius.circular(25.0),
+      borderRadius: BorderRadius.circular(8.0),
+      borderSide: BorderSide(color: errorColor, width: 2.0),
     ),
     enabledBorder: OutlineInputBorder(
-      borderSide: BorderSide(color: Colors.grey.shade200),
-      borderRadius: BorderRadius.circular(25.0),
+      borderRadius: BorderRadius.circular(8.0),
+      borderSide: BorderSide(color: darkMode ? Colors.white24 : Colors.grey.shade200),
+    ),
+    disabledBorder: OutlineInputBorder(
+      borderRadius: BorderRadius.circular(8.0),
+      borderSide: BorderSide(color: Colors.grey.shade400),
     ),
   );
 }

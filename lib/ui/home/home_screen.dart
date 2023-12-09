@@ -11,7 +11,7 @@ import 'package:app_emergen/services/gps.dart';
 import 'package:app_emergen/ui/auth/authentication_bloc.dart';
 import 'package:app_emergen/ui/auth/welcome/welcome_screen.dart';
 import 'package:provider/provider.dart';
-
+import 'package:carousel_slider/carousel_slider.dart';
 
 class HomeScreen extends StatefulWidget {
   final User user;
@@ -25,7 +25,69 @@ class HomeScreen extends StatefulWidget {
 class _HomeState extends State<HomeScreen> {
   late User user;
   final LocationService locationService = LocationService();
+  
+  List<Widget> buildCarouselItems(BuildContext context) {
+    return [
+      buildImageWithCaption( context, 'assets/images/carrusel_1.jpg', LocalizedStrings.of(context).carouselCaption1, LocalizedStrings.of(context).carouselSubtitles1),
+      buildImageWithCaption( context, 'assets/images/carrusel_2.jpg', LocalizedStrings.of(context).carouselCaption2, LocalizedStrings.of(context).carouselSubtitles2),
+      buildImageWithCaption( context, 'assets/images/carrusel_3.jpg', LocalizedStrings.of(context).carouselCaption3, LocalizedStrings.of(context).carouselSubtitles3),
+    ];
+  }
 
+  Widget buildImageWithCaption(BuildContext context, String imagePath, String caption, String captionSubtitle) {
+    return Card(
+      elevation: 5.0, // Adjust the elevation for desired shadow effect
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(10.0), // Adjust the border radius for desired roundness
+      ),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(10.0), // Same value as above to clip the image
+        child: Stack(
+          alignment: Alignment.bottomLeft,
+          children: <Widget>[
+            Image.asset(
+              imagePath,
+              fit: BoxFit.cover,
+              width: double.infinity,
+              height: 200,
+            ),
+            Positioned( // Use Positioned to place the Container at the bottom left
+              left: 10.0,
+              bottom: 10.0,
+              child: Container(
+                padding: EdgeInsets.symmetric(vertical: 5.0, horizontal: 10.0),
+                decoration: BoxDecoration(
+                  color: Colors.black.withOpacity(0.5),
+                  borderRadius: BorderRadius.circular(5.0), // Round corners for the text background
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min, // Ensure the column takes up only as much space as needed
+                  children: [
+                    Text(
+                      caption,
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 16.0,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    Text(
+                      captionSubtitle,
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 10,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
   @override
   void initState() {
     super.initState();
@@ -43,9 +105,10 @@ class _HomeState extends State<HomeScreen> {
   }
 
   Future<void> attemptSendSOS(String tipo) async {
-  bool success = await locationService.getLocationAndSendSOS(tipo);
-  handleSOSResponse(success);
+    bool success = await locationService.getLocationAndSendSOS(tipo);
+    handleSOSResponse( success );
   }
+
   @override
   Widget build(BuildContext context) {
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -119,50 +182,132 @@ class _HomeState extends State<HomeScreen> {
         ),
         body: Center(
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            mainAxisSize: MainAxisSize.max,
-            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Column(
-                  children: [
-                    SizedBox(height: 20.0), 
-                    ElevatedButton.icon(
-                      onPressed: () => attemptSendSOS('bomberos'),
-                      icon: Icon(Icons.local_fire_department, color: Colors.white, size: 48.0),
-                      label: Text( LocalizedStrings.of(context).buttonFireMan, style: TextStyle(fontSize: 20.0)),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.red,
-                        padding: EdgeInsets.all(16.0),
-                        minimumSize: Size(double.infinity, 80.0),
-                      ),
-                    ),
-                    SizedBox(height: 20.0),
-                    ElevatedButton.icon(
-                      onPressed: () => attemptSendSOS('hospital'),
-                      icon: Icon(Icons.local_hospital, color: Colors.white, size: 48.0),
-                      label: Text( LocalizedStrings.of(context).buttonAmbulance, style: TextStyle(fontSize: 20.0)),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.green,
-                        padding: EdgeInsets.all(16.0),
-                        minimumSize: Size(double.infinity, 80.0),
-                      ),
-                    ),
-                    SizedBox(height: 20.0), 
-                    ElevatedButton.icon(
-                      onPressed: () => attemptSendSOS('policia'),
-                      icon: const Icon(Icons.local_police, color: Colors.white, size: 48.0),
-                      label: Text( LocalizedStrings.of(context).buttonPolice, style: TextStyle(fontSize: 20.0)),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.black,
-                        padding: EdgeInsets.all(16.0),
-                        minimumSize: Size(double.infinity, 80.0),
-                      ),
-                    ),
-                  ],
+              CarouselSlider(
+                items: buildCarouselItems(context),
+                options: CarouselOptions(
+                  height: 200,
+                  autoPlay: true,
+                  autoPlayCurve: Curves.easeInOut,
+                  autoPlayAnimationDuration: Duration(milliseconds: 500),
+                  aspectRatio: 16/9,
+                  viewportFraction: 0.8,
                 ),
-              )
+              ),
+              Container(
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Column(
+                    children: [
+                      Container(
+                        width: double.infinity,
+                        child: Text(
+                          LocalizedStrings.of(context).ourServices, 
+                          textAlign: TextAlign.left,
+                          style: TextStyle(
+                            fontSize: 18.0,
+                            fontWeight: FontWeight.w700,
+                            color: Colors.blue,
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: 5),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          _buildServiceButton(
+                            context: context,
+                            image: 'assets/images/policia_logo.png',
+                            label: LocalizedStrings.of(context).buttonPolice,
+                            color: Colors.green,
+                            onPressed: () => attemptSendSOS('policia'),
+                          ),
+                          SizedBox(width: 10), // Espacio entre botones
+                          _buildServiceButton(
+                            context: context,
+                            image: 'assets/images/emergencia_logo.png',
+                            label: LocalizedStrings.of(context).buttonAmbulance,
+                            color: Colors.blue,
+                            onPressed: () => attemptSendSOS('hospital'),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 10), // Espacio entre las filas de botones
+                      Row(
+                        children: [
+                          Expanded(
+                            child: _buildServiceButton(
+                              context: context,
+                              image: 'assets/images/bomberos_logo.png',
+                              label: LocalizedStrings.of(context).buttonFireMan,
+                              color: Colors.red,
+                              onPressed: () => attemptSendSOS('bomberos'),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(  horizontal: 14 ),
+                child: Card(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular( 8 ), // Esquinas redondeadas del Card
+                ),
+                elevation: 10.0, // Sombra del Card
+                child: Padding(
+                  padding: const EdgeInsets.all( 16 ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Container(
+                        padding: const EdgeInsets.symmetric(vertical: 5.0, horizontal: 10.0),
+                        decoration: BoxDecoration(
+                          color: Colors.blue, 
+                          borderRadius: BorderRadius.circular(10.0),
+                        ),
+                        child: Text(
+                          LocalizedStrings.of(context).lastNotf,
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: 10),
+                      Text(
+                        LocalizedStrings.of(context).lastNotfBodyText,
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 14.0,
+                        ),
+                        maxLines: 2, 
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 5.0),
+                        child: TextButton(
+                          onPressed: () {
+                          },
+                          child: Text(
+                            LocalizedStrings.of(context).lastNotfSeeMoreButton,
+                            style: TextStyle(
+                              color: Colors.blue,
+                            ),
+                          ),
+                          style: TextButton.styleFrom(
+                            padding: EdgeInsets.zero,
+                            minimumSize: Size(50, 30),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              ),
             ],
           ),
         ),
@@ -178,4 +323,51 @@ class _HomeState extends State<HomeScreen> {
       ),
     );
   } 
+}
+
+Widget _buildServiceButton({
+  required BuildContext context,
+  required String image,
+  required String label,
+  required Color color,
+  required VoidCallback onPressed,
+}) {
+  return Expanded(
+    child: TextButton(
+      onPressed: onPressed,
+      style: TextButton.styleFrom(
+        primary: color,
+        backgroundColor: Colors.white, // Color de fondo del botón
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(8), // Bordes redondeados
+        ),
+        elevation: 4, // Elevación para la sombra
+        shadowColor: Colors.grey, // Color de la sombra
+        padding: EdgeInsets.symmetric(vertical: 16.0), // Añade padding vertical
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          SizedBox(
+            height: 60.0, // Aumenta el tamaño de la imagen
+            width: 60.0,
+            child: Image.asset(image), // Usa el nombre del asset de la imagen
+          ),
+          Padding(
+            padding: const EdgeInsets.only(top: 8.0), // Añade espacio entre la imagen y el texto
+            child: FittedBox(
+              fit: BoxFit.scaleDown, // Asegura que el texto se ajuste al espacio disponible
+              child: Text(
+                label,
+                style: TextStyle(
+                  color: color,
+                  fontSize: 14, // Mantiene el tamaño del texto
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    ),
+  );
 }
