@@ -86,6 +86,7 @@ class StringsEs {
   // Chat
   String get chatPlaceholder => "Aún No Tiene Mensajes.";
   String get chatInputHint => "Escribe un mensaje...";
-  
-
+  String get chatButtonPolice => "Policía";
+  String get chatButtonAmbulance => "Ambulancia";
+  String get chatButtonFireman => "Bomberos";
 } 
