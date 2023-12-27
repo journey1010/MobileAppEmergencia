@@ -1,6 +1,7 @@
 import 'dart:math';
 import 'package:app_emergen/localization/localized_strings.dart';
 import 'package:app_emergen/ui/chat/chat_screen.dart';
+import 'package:app_emergen/ui/map/map_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -158,12 +159,25 @@ class _HomeState extends State<HomeScreen> {
               ),
               ListTile(
                 title: Text(
+                  LocalizedStrings.of(context).sideBarItemMap,
+                  style: TextStyle(color: Colors.black),
+                ),
+                leading: Icon(Icons.map, color: Colors.black),
+                onTap: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(builder: (context) => MapScreen()),
+                  );
+                },
+              ),
+              ListTile(
+                title: Text(
                   LocalizedStrings.of(context).sideBarItemLogout,
                   style: TextStyle(color: Colors.black),
                 ),
                 leading: Transform.rotate(
-                    angle: pi / 1,
-                    child: const Icon(Icons.exit_to_app, color: Colors.black)),
+                  angle: pi / 1,
+                  child: const Icon(Icons.exit_to_app, color: Colors.black),
+                ),
                 onTap: () {
                   context.read<AuthenticationBloc>().add(LogoutEvent());
                 },

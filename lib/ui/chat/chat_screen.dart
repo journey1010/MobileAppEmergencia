@@ -25,6 +25,7 @@ Widget build(BuildContext context) {
     appBar: AppBar(
       title: Text("Chat"),
       backgroundColor: Colors.white,
+      titleTextStyle: TextStyle( color: Colors.black, fontSize: 20 ),
     ),
     body: Stack(
       children: [

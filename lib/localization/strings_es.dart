@@ -20,6 +20,8 @@ class StringsEs {
   
   String get sideBarItemUser => "Perfil";
   String get sideBarItemLogout => "Salir";
+  String get sideBarItemMap => "Ver Mapa";
+
   
   String get appBarHomeScreen => "Inicio";
   String get buttonFireMan => "BOMBEROS";

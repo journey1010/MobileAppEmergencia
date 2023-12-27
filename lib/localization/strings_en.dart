@@ -13,7 +13,8 @@ class StringsEn {
 
   String get sideBarItemUser => "Profile";
   String get sideBarItemLogout => "Logout";
-  
+   String get sideBarItemMap => "View Map";
+
   String get appBarHomeScreen => "Home";
   String get buttonFireMan => "FIREFIGHTERS";
   String get buttonAmbulance => "AMBULANCE";
